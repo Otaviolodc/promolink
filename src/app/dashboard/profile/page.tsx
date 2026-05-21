@@ -1,0 +1,482 @@
+"use client";
+
+import ProfilePreview from "@/components/dashboard/ProfilePreview";
+import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabase";
+
+export default function ProfilePage() {
+  const [loading, setLoading] =
+    useState(false);
+
+  // PERFIL
+  const [username, setUsername] =
+    useState("");
+
+  const [bio, setBio] = useState("");
+
+  const [avatarUrl, setAvatarUrl] =
+    useState("");
+
+  const [instagram, setInstagram] =
+    useState("");
+
+  const [telegram, setTelegram] =
+    useState("");
+
+  const [whatsapp, setWhatsapp] =
+    useState("");
+
+  const [featuredText, setFeaturedText] =
+    useState("");
+
+  const [featuredUrl, setFeaturedUrl] =
+    useState("");
+
+  // 🎨 CORES
+  const [themeColor, setThemeColor] =
+    useState("#00ff88");
+
+    const [template, setTemplate] =
+  useState("dark");
+
+  const [
+    productTextColor,
+    setProductTextColor,
+  ] = useState("#ffffff");
+
+  // 🚀 carregar perfil
+  const fetchProfile = async () => {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) return;
+
+    const { data } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("id", user.id)
+      .single();
+
+    if (data) {
+      
+      setTemplate(
+  data.template || "dark"
+);
+      setUsername(data.username || "");
+
+      setBio(data.bio || "");
+
+      setAvatarUrl(
+        data.avatar_url || ""
+      );
+
+      setInstagram(
+        data.instagram || ""
+      );
+
+      setTelegram(
+        data.telegram || ""
+      );
+
+      setWhatsapp(
+        data.whatsapp || ""
+      );
+
+      setFeaturedText(
+        data.featured_text || ""
+      );
+
+      setFeaturedUrl(
+        data.featured_url || ""
+      );
+
+      setThemeColor(
+        data.theme_color ||
+          "#00ff88"
+      );
+
+      setProductTextColor(
+        data.product_text_color ||
+          "#ffffff"
+      );
+    }
+  };
+
+  useEffect(() => {
+  fetchProfile();
+}, []);
+
+// 📸 upload imagem
+const handleUpload = async (
+  e: any
+) => {
+  const file = e.target.files?.[0];
+
+  if (!file) return;
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) return;
+
+  const fileExt =
+    file.name.split(".").pop();
+
+  const fileName = `${user.id}-${Date.now()}.${fileExt}`;
+
+  const { error } =
+  await supabase.storage
+    .from("avatars")
+    .upload(fileName, file, {
+      upsert: true,
+    });
+
+if (error) {
+  console.log(error);
+
+  alert(error.message);
+
+  return;
+}
+
+const { data } = supabase.storage
+  .from("avatars")
+  .getPublicUrl(fileName);
+
+setAvatarUrl(data.publicUrl);
+};
+
+  // 💾 salvar
+  const handleSave = async () => {
+    setLoading(true);
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) return;
+
+    const { error } = await supabase
+      .from("profiles")
+      .update({
+        username,
+        bio,
+        avatar_url: avatarUrl,
+        instagram,
+        telegram,
+        whatsapp,
+        featured_text: featuredText,
+        featured_url: featuredUrl,
+        theme_color: themeColor,
+        product_text_color:
+          productTextColor,
+        template,
+      })
+      .eq("id", user.id);
+
+    setLoading(false);
+
+    if (error) {
+      alert("Erro ao salvar");
+      return;
+    }
+
+    alert("Perfil atualizado 🚀");
+  };
+
+  return (
+  <div className="min-h-screen bg-black text-white p-8">
+
+    {/* HEADER */}
+    <div className="mb-10">
+
+      <h1 className="text-5xl font-bold">
+        Editar Perfil
+      </h1>
+
+      <p className="text-gray-400 mt-2 text-lg">
+        Personalize sua página pública
+      </p>
+
+    </div>
+
+    {/* BANNER PREMIUM */}
+    <div className="bg-gradient-to-r from-zinc-900 to-black border border-zinc-800 rounded-[40px] p-12 mb-10 relative overflow-hidden">
+
+      <div className="absolute top-0 right-0 w-72 h-72 bg-green-500/10 blur-3xl rounded-full" />
+
+      <div className="relative z-10 flex items-center gap-8">
+
+        <img
+          src={
+            avatarUrl ||
+            "/placeholder.png"
+          }
+          className="w-32 h-32 rounded-full object-cover border-4"
+          style={{
+            borderColor: themeColor,
+          }}
+        />
+
+        <div>
+
+          <div className="flex items-center gap-3">
+
+            <h2 className="text-5xl font-extrabold">
+              @{username || "usuario"}
+            </h2>
+
+            <div className="bg-green-500 text-black font-bold px-4 py-1 rounded-full text-sm">
+              PRO
+            </div>
+
+          </div>
+
+          <p className="text-gray-300 mt-3 text-lg">
+            {bio ||
+              "Sua bio aparecerá aqui"}
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    {/* GRID */}
+    <div className="grid grid-cols-1 xl:grid-cols-[1fr_350px] gap-10">
+
+      {/* FORM */}
+      <div className="bg-zinc-900/70 backdrop-blur-xl border border-zinc-800 rounded-[32px] p-8 shadow-2xl">
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+          {/* USERNAME */}
+          <div>
+            <label className="text-sm text-zinc-400 mb-2 block">
+              Username
+            </label>
+
+            <input
+              value={username}
+              onChange={(e) =>
+                setUsername(
+                  e.target.value
+                )
+              }
+              className="w-full bg-zinc-800 border border-zinc-700 rounded-2xl p-4"
+            />
+          </div>
+
+          {/* COR */}
+          <div>
+            <label className="text-sm text-zinc-400 mb-2 block">
+              Cor do tema
+            </label>
+
+            <input
+              type="color"
+              value={themeColor}
+              onChange={(e) =>
+                setThemeColor(
+                  e.target.value
+                )
+              }
+              className="w-full h-16 rounded-2xl bg-zinc-800 border border-zinc-700"
+            />
+          </div>
+
+          {/* TEXTO PRODUTO */}
+          <div>
+            <label className="text-sm text-zinc-400 mb-2 block">
+              Cor texto produto
+            </label>
+
+            <input
+              type="color"
+              value={productTextColor}
+              onChange={(e) =>
+                setProductTextColor(
+                  e.target.value
+                )
+              }
+              className="w-full h-16 rounded-2xl bg-zinc-800 border border-zinc-700"
+            />
+          </div>
+
+          {/* FOTO */}
+          <div>
+            <label className="text-sm text-zinc-400 mb-2 block">
+              Upload da Foto
+            </label>
+
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleUpload}
+              className="w-full bg-zinc-800 border border-zinc-700 rounded-2xl p-4"
+           />
+         </div>
+
+        </div>
+
+        {/* BIO */}
+        <div className="mt-6">
+
+          <label className="text-sm text-zinc-400 mb-2 block">
+            Bio
+          </label>
+
+          <textarea
+            value={bio}
+            onChange={(e) =>
+              setBio(e.target.value)
+            }
+            rows={5}
+            className="w-full bg-zinc-800 border border-zinc-700 rounded-2xl p-4"
+          />
+
+        </div>
+
+        {/* REDES */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+
+          <input
+            placeholder="Instagram"
+            value={instagram}
+            onChange={(e) =>
+              setInstagram(
+                e.target.value
+              )
+            }
+            className="bg-zinc-800 border border-zinc-700 rounded-2xl p-4"
+          />
+
+          <input
+            placeholder="Telegram"
+            value={telegram}
+            onChange={(e) =>
+              setTelegram(
+                e.target.value
+              )
+            }
+            className="bg-zinc-800 border border-zinc-700 rounded-2xl p-4"
+          />
+
+          <input
+            placeholder="WhatsApp"
+            value={whatsapp}
+            onChange={(e) =>
+              setWhatsapp(
+                e.target.value
+              )
+            }
+            className="bg-zinc-800 border border-zinc-700 rounded-2xl p-4"
+          />
+
+        </div>
+
+        {/* DESTAQUE */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+
+          <input
+            placeholder="Texto destaque"
+            value={featuredText}
+            onChange={(e) =>
+              setFeaturedText(
+                e.target.value
+              )
+            }
+            className="bg-zinc-800 border border-zinc-700 rounded-2xl p-4"
+          />
+
+          <input
+            placeholder="URL destaque"
+            value={featuredUrl}
+            onChange={(e) =>
+              setFeaturedUrl(
+                e.target.value
+              )
+            }
+            className="bg-zinc-800 border border-zinc-700 rounded-2xl p-4"
+          />
+
+        </div>
+
+        {/* TEMPLATE */}
+<div className="mt-6">
+
+  <label className="text-sm text-zinc-400 mb-2 block">
+    Template Premium
+  </label>
+
+  <select
+    value={template}
+    onChange={(e) =>
+      setTemplate(e.target.value)
+    }
+    className="
+      w-full
+      bg-zinc-800
+      border
+      border-zinc-700
+      rounded-2xl
+      p-4
+    "
+  >
+
+    <option value="dark">
+      Dark
+    </option>
+
+    <option value="glass">
+      Glass
+    </option>
+
+    <option value="neon">
+      Neon
+    </option>
+
+    <option value="luxury">
+      Luxury
+    </option>
+
+    <option value="cyberpunk">
+      Cyberpunk
+    </option>
+
+  </select>
+
+</div>
+
+        {/* BOTÃO */}
+        <button
+          onClick={handleSave}
+          disabled={loading}
+          className="w-full mt-8 bg-green-500 hover:bg-green-400 transition text-black font-bold py-4 rounded-2xl text-lg"
+        >
+          {loading
+            ? "Salvando..."
+            : "Salvar Perfil"}
+        </button>
+
+      </div>
+
+      {/* PREVIEW */}
+      <ProfilePreview
+        username={username}
+        bio={bio}
+        avatarUrl={avatarUrl}
+        themeColor={themeColor}
+        productTextColor={
+          productTextColor
+        }
+      />
+
+    </div>
+
+  </div>
+);
+}
