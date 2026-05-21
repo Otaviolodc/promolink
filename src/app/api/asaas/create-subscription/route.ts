@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { ASAAS_URL, asaasHeaders } from "@/lib/asaas"
+import { ASAAS_URL, getAsaasHeaders } from "@/lib/asaas"
 
 export async function POST(req: Request) {
 
@@ -17,7 +17,7 @@ export async function POST(req: Request) {
       `${ASAAS_URL}/subscriptions`,
       {
         method: "POST",
-        headers: asaasHeaders,
+        headers: getAsaasHeaders(),
         body: JSON.stringify({
           customer,
           billingType: "PIX",

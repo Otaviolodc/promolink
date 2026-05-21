@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { ASAAS_URL, asaasHeaders } from "@/lib/asaas"
+import { ASAAS_URL, getAsaasHeaders } from "@/lib/asaas"
 
 export async function POST(req: Request) {
 
@@ -13,7 +13,7 @@ export async function POST(req: Request) {
       `${ASAAS_URL}/subscriptions/${subscriptionId}`,
       {
         method: "DELETE",
-        headers: asaasHeaders,
+        headers: getAsaasHeaders(),
       }
     )
 
