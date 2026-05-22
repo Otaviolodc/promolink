@@ -15,90 +15,54 @@ export default function PricingPage() {
 
       setLoading(true);
 
-      // 🚀 cria cliente
-      const customerResponse =
-        await fetch(
-          "/api/asaas/create-customer",
-          {
-            method: "POST",
+      try {
 
-            headers: {
-              "Content-Type":
-                "application/json",
-            },
+        const response =
+          await fetch(
+            "/api/asaas/create-payment",
+            {
+              method: "POST",
 
-            body: JSON.stringify({
-              name: "Usuário PromoLink",
-              email:
-                "teste@promolink.com",
-              cpfCnpj:
-                "14895719650",
-            }),
-          }
-        );
+              headers: {
+                "Content-Type":
+                  "application/json",
+              },
 
-      const customerData =
-        await customerResponse.json();
+              body: JSON.stringify({
+                name: "Usuário PromoLink",
 
-      // 🚀 cria PIX
-      const paymentResponse =
-        await fetch(
-          "/api/asaas/create-payment",
-          {
-            method: "POST",
+                email:
+                  "teste@promolink.com",
 
-            headers: {
-              "Content-Type":
-                "application/json",
-            },
+                cpfCnpj:
+                  "14895719650",
 
-            body: JSON.stringify({
-              customer:
-                customerData.id,
+                value: 29.90,
 
-              value: 29.90,
+                userId:
+                  "user_teste",
+              }),
+            }
+          );
 
-              description:
-                "PromoLink PRO",
-            }),
-          }
-        );
+        const data =
+          await response.json();
 
-      const paymentData =
-        await paymentResponse.json();
+        console.log(data);
 
-      console.log(paymentData)
+        setPixData(data);
 
-      // 🚀 buscar QRCode PIX
-      const pixResponse =
-        await fetch(
-          "/api/asaas/pix-qrcode",
-          {
-            method: "POST",
+      } catch (error) {
 
-            headers: {
-              "Content-Type":
-                "application/json",
-            },
+        console.log(error);
 
-            body: JSON.stringify({
-              paymentId:
-                paymentData.id,
-            }),
-         }
-       );
-
-      const pixResult =
-        await pixResponse.json();
-
-      console.log(JSON.stringify(pixResult, null, 2));
-
-      setPixData(pixResult);
+      }
 
       setLoading(false);
     };
 
   return (
+
     <div className="min-h-screen bg-black text-white flex items-center justify-center p-8">
 
       <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-10 max-w-lg w-full">
@@ -149,10 +113,7 @@ export default function PricingPage() {
             />
 
             <textarea
-              value={
-                pixData.payload || ""
-                  || ""
-              }
+              value={pixData.payload || ""}
               readOnly
               className="w-full bg-zinc-800 mt-6 p-4 rounded-2xl text-sm h-32"
             />
@@ -164,5 +125,7 @@ export default function PricingPage() {
       </div>
 
     </div>
+
   );
+
 }
