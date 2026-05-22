@@ -1,51 +1,108 @@
-import Link from 'next/link'
+import Link from "next/link";
 
-export default function Home() {
+export default function HomePage() {
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      <div className="container mx-auto px-4 py-16">
-        <div className="text-center">
-          <h1 className="text-5xl font-bold text-gray-900 mb-4">
+
+    <main className="min-h-screen bg-black text-white flex items-center justify-center p-8">
+
+      <div className="max-w-6xl w-full">
+
+        {/* HERO */}
+
+        <div className="text-center mb-20">
+
+          <h1 className="text-7xl font-bold mb-6">
             PromoLink
           </h1>
-          <p className="text-xl text-gray-600 mb-8">
-            Create beautiful link pages for your affiliate offers with tracking
+
+          <p className="text-zinc-400 text-2xl max-w-3xl mx-auto leading-relaxed">
+            Crie páginas de links profissionais,
+            acompanhe cliques e monetize seus produtos
+            com um sistema moderno e automatizado.
           </p>
-          
-          <div className="space-x-4">
-            <Link
-              href="/dashboard"
-              className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700"
-            >
-              Get Started
-            </Link>
+
+          <div className="flex items-center justify-center gap-4 mt-10">
+
             <Link
               href="/auth"
-              className="border border-blue-600 text-blue-600 px-8 py-3 rounded-lg hover:bg-blue-50"
+              className="bg-green-500 hover:bg-green-400 transition px-8 py-4 rounded-2xl font-bold text-black text-lg"
             >
-              Sign In
+              Começar Agora
             </Link>
+
+            <Link
+              href="/pricing"
+              className="border border-zinc-700 hover:border-zinc-500 transition px-8 py-4 rounded-2xl font-bold text-lg"
+            >
+              Ver Planos
+            </Link>
+
           </div>
+
         </div>
 
-        <div className="mt-16 text-center">
-          <h2 className="text-3xl font-bold mb-8">How it works</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-white p-6 rounded-lg shadow-md">
-              <h3 className="text-xl font-semibold mb-2">1. Create Links</h3>
-              <p className="text-gray-600">Add your affiliate links with tracking</p>
+        {/* CARDS */}
+
+        <div className="grid md:grid-cols-3 gap-6">
+
+          <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-8">
+
+            <div className="text-5xl mb-6">
+              🔗
             </div>
-            <div className="bg-white p-6 rounded-lg shadow-md">
-              <h3 className="text-xl font-semibold mb-2">2. Share Your Page</h3>
-              <p className="text-gray-600">Get your personal promolink.com/username</p>
-            </div>
-            <div className="bg-white p-6 rounded-lg shadow-md">
-              <h3 className="text-xl font-semibold mb-2">3. Track Clicks</h3>
-              <p className="text-gray-600">Monitor performance in your dashboard</p>
-            </div>
+
+            <h2 className="text-2xl font-bold mb-4">
+              Crie Links
+            </h2>
+
+            <p className="text-zinc-400 leading-relaxed">
+              Adicione produtos, afiliados e ofertas
+              em uma página moderna e profissional.
+            </p>
+
           </div>
+
+          <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-8">
+
+            <div className="text-5xl mb-6">
+              📈
+            </div>
+
+            <h2 className="text-2xl font-bold mb-4">
+              Analytics
+            </h2>
+
+            <p className="text-zinc-400 leading-relaxed">
+              Veja cliques, desempenho e métricas
+              em tempo real do seu perfil.
+            </p>
+
+          </div>
+
+          <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-8">
+
+            <div className="text-5xl mb-6">
+              💰
+            </div>
+
+            <h2 className="text-2xl font-bold mb-4">
+              Monetize
+            </h2>
+
+            <p className="text-zinc-400 leading-relaxed">
+              Venda produtos, assinaturas e links
+              premium com integração PIX.
+            </p>
+
+          </div>
+
         </div>
+
       </div>
-    </div>
-  )
+
+    </main>
+
+  );
+
 }
