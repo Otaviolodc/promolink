@@ -2,7 +2,13 @@
 
 import { useState } from "react";
 
+import { useRouter } from "next/navigation";
+
+import { supabase } from "@/lib/supabase";
+
 export default function AuthPage() {
+
+  const router = useRouter();
 
   const [email, setEmail] =
     useState("");
@@ -10,11 +16,97 @@ export default function AuthPage() {
   const [password, setPassword] =
     useState("");
 
+  const [loading, setLoading] =
+    useState(false);
+
+  // LOGIN
+  const handleLogin = async () => {
+
+    try {
+
+      setLoading(true);
+
+      const { error } =
+        await supabase.auth.signInWithPassword({
+
+          email,
+          password,
+
+        });
+
+      if (error) {
+
+        alert(error.message);
+
+        setLoading(false);
+
+        return;
+
+      }
+
+      // 🚀 redirect rápido
+      window.location.href = "/dashboard";
+
+    } catch (error) {
+
+      console.log(error);
+
+      alert("Erro ao fazer login");
+
+      setLoading(false);
+
+    }
+
+  };
+
+  // CRIAR CONTA
+  const handleSignup = async () => {
+
+    try {
+
+      setLoading(true);
+
+      const { error } =
+        await supabase.auth.signUp({
+
+          email,
+          password,
+
+        });
+
+      if (error) {
+
+        alert(error.message);
+
+        setLoading(false);
+
+        return;
+
+      }
+
+      alert("Conta criada com sucesso!");
+
+      window.location.href = "/dashboard";
+
+    } catch (error) {
+
+      console.log(error);
+
+      alert("Erro ao criar conta");
+
+      setLoading(false);
+
+    }
+
+  };
+
   return (
 
     <div className="min-h-screen bg-black flex items-center justify-center p-6">
 
       <div className="w-full max-w-md bg-zinc-900 border border-zinc-800 rounded-3xl p-10 shadow-2xl">
+
+        {/* HEADER */}
 
         <div className="text-center mb-8">
 
@@ -27,6 +119,8 @@ export default function AuthPage() {
           </p>
 
         </div>
+
+        {/* FORM */}
 
         <div className="space-y-5">
 
@@ -51,12 +145,22 @@ export default function AuthPage() {
           />
 
           <button
+            onClick={handleLogin}
+            disabled={loading}
             className="w-full bg-green-500 hover:bg-green-400 transition text-black py-4 rounded-2xl font-bold text-lg"
           >
-            Entrar
+
+            {
+              loading
+                ? "Entrando..."
+                : "Entrar"
+            }
+
           </button>
 
         </div>
+
+        {/* SIGNUP */}
 
         <div className="text-center mt-8">
 
@@ -65,9 +169,13 @@ export default function AuthPage() {
           </p>
 
           <button
+            onClick={handleSignup}
+            disabled={loading}
             className="text-green-400 hover:text-green-300 font-semibold mt-2"
           >
+
             Criar Conta
+
           </button>
 
         </div>
