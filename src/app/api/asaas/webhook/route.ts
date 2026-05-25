@@ -1,68 +1,62 @@
-import { NextResponse } from "next/server"
-import { supabase } from "@/lib/supabase"
+import { NextResponse } from "next/server";
+
+import { supabase } from "@/lib/supabase";
 
 export async function POST(req: Request) {
 
   try {
 
-    const body = await req.json()
+    const body = await req.json();
 
-    console.log("WEBHOOK:")
-    console.log(body)
+    console.log("WEBHOOK:");
+    console.log(body);
 
-    const event = body.event
+    const event = body.event;
 
-    const payment = body.payment
+    // pagamento confirmado
+    if (
+      event === "PAYMENT_RECEIVED"
+      ||
+      event === "PAYMENT_CONFIRMED"
+    ) {
 
-    // pagamento recebido
-    if (event === "PAYMENT_RECEIVED") {
+      const payment =
+        body.payment;
 
-      // buscar pagamento salvo
-      const { data: paymentData } = await supabase
-        .from("payments")
-        .select("*")
-        .eq("payment_id", payment.id)
-        .single()
+      const userId =
+        payment.externalReference;
 
-      // liberar PRO
-      if (paymentData?.user_id) {
+      console.log("USER ID:");
+      console.log(userId);
 
-        await supabase
-          .from("profiles")
-          .update({
-            is_pro: true,
-          })
-          .eq("id", paymentData.user_id)
+      // ativa PRO
+      await supabase
+        .from("profiles")
+        .update({
+          is_pro: true,
+        })
+        .eq("id", userId);
 
-        // atualizar pagamento
-        await supabase
-          .from("payments")
-          .update({
-            status: "RECEIVED",
-          })
-          .eq("payment_id", payment.id)
-
-        console.log("USUARIO LIBERADO PRO")
-      }
+      console.log("PRO ATIVADO");
 
     }
 
     return NextResponse.json({
       success: true,
-    })
+    });
 
   } catch (error) {
 
-    console.log(error)
+    console.log(error);
 
     return NextResponse.json(
       {
-        error: "Erro webhook"
+        error: "Erro webhook",
       },
       {
-        status: 500
+        status: 500,
       }
-    )
+    );
 
   }
 
