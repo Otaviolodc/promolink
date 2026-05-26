@@ -1,6 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import {
+  useState,
+  useEffect,
+} from "react";
 
 import { supabase } from "@/lib/supabase";
 
@@ -12,90 +15,176 @@ export default function PricingPage() {
   const [loading, setLoading] =
     useState(false);
 
-  const handleSubscribe =
-    async () => {
+  const [profile, setProfile] =
+    useState<any>(null);
 
-      try {
+  // =========================
+  // CARREGAR PERFIL
+  // =========================
 
-        setLoading(true);
+  useEffect(() => {
 
-        // 🚀 pegar usuário logado
-        const {
-          data: { user },
-        } = await supabase.auth.getUser();
+    loadProfile();
 
-        if (!user) {
+  }, []);
 
-          alert("Usuário não autenticado");
+  async function loadProfile() {
 
-          setLoading(false);
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
-          return;
+    if (!user) return;
 
-        }
+    const { data } =
+      await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", user.id)
+        .single();
 
-        // 🚀 criar pagamento
-        const response =
-          await fetch(
-            "/api/asaas/create-payment",
-            {
-              method: "POST",
+    setProfile(data);
 
-              headers: {
-                "Content-Type":
-                  "application/json",
-              },
+  }
 
-              body: JSON.stringify({
+  // =========================
+  // ASSINAR PRO
+  // =========================
 
-                name:
-                  user.email || "Usuário",
+  async function handleSubscribe() {
 
-                email:
-                  user.email,
+    try {
 
-                cpfCnpj:
-                  "14895719650",
+      setLoading(true);
 
-                value: 29.90,
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
 
-                userId:
-                  user.id,
-
-              }),
-            }
-          );
-
-        const data =
-          await response.json();
-
-        console.log(data);
-
-        // 🚨 erro API
-        if (data.error) {
-
-          alert(data.error);
-
-          setLoading(false);
-
-          return;
-
-        }
-
-        setPixData(data);
-
-      } catch (error) {
-
-        console.log(error);
+      if (!user) {
 
         alert(
-          "Erro ao gerar PIX"
+          "Usuário não autenticado"
         );
+
+        setLoading(false);
+
+        return;
 
       }
 
-      setLoading(false);
-    };
+      const response =
+        await fetch(
+          "/api/asaas/create-payment",
+          {
+            method: "POST",
+
+            headers: {
+              "Content-Type":
+                "application/json",
+            },
+
+            body: JSON.stringify({
+
+              name:
+                user.email || "Usuário",
+
+              email:
+                user.email,
+
+              cpfCnpj:
+                "14895719650",
+
+              value: 29.90,
+
+              userId:
+                user.id,
+
+            }),
+          }
+        );
+
+      const data =
+        await response.json();
+
+      console.log(data);
+
+      if (data.error) {
+
+        alert(data.error);
+
+        setLoading(false);
+
+        return;
+
+      }
+
+      setPixData(data);
+
+    } catch (error) {
+
+      console.log(error);
+
+      alert(
+        "Erro ao gerar PIX"
+      );
+
+    }
+
+    setLoading(false);
+
+  }
+
+  // =========================
+  // CANCELAR ASSINATURA
+  // =========================
+
+  async function handleCancel() {
+
+    const confirmCancel =
+      confirm(
+        "Cancelar assinatura PRO?"
+      );
+
+    if (!confirmCancel) return;
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) return;
+
+    const { error } =
+      await supabase
+        .from("profiles")
+        .update({
+
+          subscription_status:
+            "cancelled",
+
+          subscription_plan:
+            "free",
+
+          is_pro: false,
+
+        })
+        .eq("id", user.id);
+
+    if (error) {
+
+      alert(error.message);
+
+      return;
+
+    }
+
+    alert(
+      "Assinatura cancelada"
+    );
+
+    loadProfile();
+
+  }
 
   return (
 
@@ -126,7 +215,37 @@ export default function PricingPage() {
 
         </div>
 
-        {!pixData ? (
+        {/* ========================= */}
+        {/* ASSINATURA ATIVA */}
+        {/* ========================= */}
+
+        {profile?.subscription_status ===
+        "active" ? (
+
+          <div className="bg-green-500/10 border border-green-500 rounded-2xl p-6">
+
+            <h2 className="text-2xl font-bold text-green-400">
+              Plano PRO Ativo 🚀
+            </h2>
+
+            <p className="text-gray-300 mt-2">
+              Sua assinatura recorrente está ativa.
+            </p>
+
+            <button
+              onClick={handleCancel}
+              className="mt-6 w-full bg-red-500 hover:bg-red-400 transition py-4 rounded-2xl font-bold"
+            >
+              Cancelar assinatura
+            </button>
+
+          </div>
+
+        ) : !pixData ? (
+
+          /* ========================= */
+          /* BOTÃO ASSINAR */
+          /* ========================= */
 
           <button
             onClick={handleSubscribe}
@@ -143,6 +262,10 @@ export default function PricingPage() {
           </button>
 
         ) : (
+
+          /* ========================= */
+          /* QR CODE PIX */
+          /* ========================= */
 
           <div>
 
