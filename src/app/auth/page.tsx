@@ -2,13 +2,9 @@
 
 import { useState } from "react";
 
-import { useRouter } from "next/navigation";
-
 import { supabase } from "@/lib/supabase";
 
 export default function AuthPage() {
-
-  const router = useRouter();
 
   const [email, setEmail] =
     useState("");
@@ -17,6 +13,9 @@ export default function AuthPage() {
     useState("");
 
   const [loading, setLoading] =
+    useState(false);
+
+  const [isSignup, setIsSignup] =
     useState(false);
 
   // LOGIN
@@ -44,7 +43,6 @@ export default function AuthPage() {
 
       }
 
-      // 🚀 redirect rápido
       window.location.href = "/dashboard";
 
     } catch (error) {
@@ -107,7 +105,6 @@ export default function AuthPage() {
       <div className="w-full max-w-md bg-zinc-900 border border-zinc-800 rounded-3xl p-10 shadow-2xl">
 
         {/* HEADER */}
-
         <div className="text-center mb-8">
 
           <h1 className="text-5xl font-bold text-white mb-3">
@@ -115,13 +112,18 @@ export default function AuthPage() {
           </h1>
 
           <p className="text-zinc-400">
-            Entre na sua conta
+
+            {
+              isSignup
+                ? "Crie sua conta"
+                : "Entre na sua conta"
+            }
+
           </p>
 
         </div>
 
         {/* FORM */}
-
         <div className="space-y-5">
 
           <input
@@ -145,38 +147,81 @@ export default function AuthPage() {
           />
 
           <button
-            onClick={handleLogin}
+            onClick={
+              isSignup
+                ? handleSignup
+                : handleLogin
+            }
             disabled={loading}
             className="w-full bg-green-500 hover:bg-green-400 transition text-black py-4 rounded-2xl font-bold text-lg"
           >
 
             {
               loading
-                ? "Entrando..."
-                : "Entrar"
+                ? (
+                    isSignup
+                      ? "Criando conta..."
+                      : "Entrando..."
+                  )
+                : (
+                    isSignup
+                      ? "Criar Conta"
+                      : "Entrar"
+                  )
             }
 
           </button>
 
         </div>
 
-        {/* SIGNUP */}
-
+        {/* TOGGLE LOGIN/SIGNUP */}
         <div className="text-center mt-8">
 
-          <p className="text-zinc-500">
-            Não possui conta?
-          </p>
+          {
+            isSignup ? (
 
-          <button
-            onClick={handleSignup}
-            disabled={loading}
-            className="text-green-400 hover:text-green-300 font-semibold mt-2"
-          >
+              <>
 
-            Criar Conta
+                <p className="text-zinc-500">
+                  Já possui conta?
+                </p>
 
-          </button>
+                <button
+                  onClick={() =>
+                    setIsSignup(false)
+                  }
+                  className="text-green-400 hover:text-green-300 font-semibold mt-2"
+                >
+
+                  Fazer Login
+
+                </button>
+
+              </>
+
+            ) : (
+
+              <>
+
+                <p className="text-zinc-500">
+                  Não possui conta?
+                </p>
+
+                <button
+                  onClick={() =>
+                    setIsSignup(true)
+                  }
+                  className="text-green-400 hover:text-green-300 font-semibold mt-2"
+                >
+
+                  Criar Conta
+
+                </button>
+
+              </>
+
+            )
+          }
 
         </div>
 
