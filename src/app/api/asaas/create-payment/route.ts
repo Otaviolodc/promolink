@@ -8,7 +8,9 @@ const supabase = createClient(
 );
 
 export async function POST(req: Request) {
+
   try {
+
     const body = await req.json();
 
     const {
@@ -19,8 +21,12 @@ export async function POST(req: Request) {
       userId,
     } = body;
 
+    // =========================
     // VALIDAÇÃO
+    // =========================
+
     if (!userId) {
+
       return NextResponse.json(
         {
           error: "userId obrigatório",
@@ -29,11 +35,15 @@ export async function POST(req: Request) {
           status: 400,
         }
       );
+
     }
 
     const headers = {
       accept: "application/json",
-      "content-type": "application/json",
+
+      "content-type":
+        "application/json",
+
       access_token: String(
         process.env.ASAAS_API_KEY
       ),
@@ -48,7 +58,9 @@ export async function POST(req: Request) {
         `${ASAAS_URL}/customers`,
         {
           method: "POST",
+
           headers,
+
           body: JSON.stringify({
             name,
             email,
@@ -60,24 +72,37 @@ export async function POST(req: Request) {
     const customerData =
       await customerResponse.json();
 
+    console.log(
+      "CUSTOMER:"
+    );
+
+    console.log(customerData);
+
     // =========================
-    // CRIAR PAGAMENTO PIX
+    // CRIAR ASSINATURA
     // =========================
 
-    const paymentResponse =
+    const subscriptionResponse =
       await fetch(
-        `${ASAAS_URL}/payments`,
+        `${ASAAS_URL}/subscriptions`,
         {
           method: "POST",
-          headers,
-          body: JSON.stringify({
-            customer: customerData.id,
 
-            billingType: "PIX",
+          headers,
+
+          body: JSON.stringify({
+            customer:
+              customerData.id,
+
+            billingType:
+              "PIX",
 
             value,
 
-            dueDate:
+            cycle:
+              "MONTHLY",
+
+            nextDueDate:
               new Date()
                 .toISOString()
                 .split("T")[0],
@@ -91,36 +116,43 @@ export async function POST(req: Request) {
         }
       );
 
-    const paymentData =
-      await paymentResponse.json();
+    const subscriptionData =
+      await subscriptionResponse.json();
 
     console.log(
-      "PAYMENT CREATED:"
+      "SUBSCRIPTION:"
     );
 
-    console.log(paymentData);
+    console.log(
+      subscriptionData
+    );
 
     // =========================
-    // SALVAR PAYMENT
+    // SALVAR ASSINATURA
     // =========================
 
     await supabase
       .from("payments")
       .insert({
         user_id: userId,
-        payment_id: paymentData.id,
-        status: paymentData.status,
+
+        payment_id:
+          subscriptionData.id,
+
+        status:
+          subscriptionData.status,
       });
 
     // =========================
-    // PEGAR QRCODE
+    // PEGAR QR CODE PIX
     // =========================
 
     const qrResponse =
       await fetch(
-        `${ASAAS_URL}/payments/${paymentData.id}/pixQrCode`,
+        `${ASAAS_URL}/subscriptions/${subscriptionData.id}/payments`,
         {
           method: "GET",
+
           headers,
         }
       );
@@ -128,29 +160,68 @@ export async function POST(req: Request) {
     const qrData =
       await qrResponse.json();
 
+    const firstPayment =
+      qrData.data?.[0];
+
+    if (!firstPayment) {
+
+      return NextResponse.json({
+        error:
+          "Pagamento não encontrado",
+      });
+
+    }
+
+    // =========================
+    // PEGAR QR CODE DO PIX
+    // =========================
+
+    const pixResponse =
+      await fetch(
+        `${ASAAS_URL}/payments/${firstPayment.id}/pixQrCode`,
+        {
+          method: "GET",
+
+          headers,
+        }
+      );
+
+    const pixData =
+      await pixResponse.json();
+
     return NextResponse.json({
       success: true,
 
-      paymentId: paymentData.id,
+      subscriptionId:
+        subscriptionData.id,
 
-      status: paymentData.status,
+      paymentId:
+        firstPayment.id,
 
-      payload: qrData.payload,
+      status:
+        firstPayment.status,
+
+      payload:
+        pixData.payload,
 
       encodedImage:
-        qrData.encodedImage,
+        pixData.encodedImage,
     });
+
   } catch (error) {
+
     console.log(error);
 
     return NextResponse.json(
       {
         error:
-          "Erro ao criar pagamento",
+          "Erro ao criar assinatura",
       },
       {
         status: 500,
       }
     );
+
   }
+
 }
