@@ -79,34 +79,86 @@ export default async function PublicPage({
       }}
     >
 
-      {/* PERFIL */}
-      <div className="flex flex-col items-center mb-8">
+      {/* HERO PREMIUM */}
+<div className="relative flex flex-col items-center mb-12 w-full">
 
-        {/* FOTO */}
-        {profile.avatar_url ? (
-          <img
-            src={profile.avatar_url}
-            className="w-28 h-28 rounded-full object-cover border-4 border-white shadow-2xl"
-          />
-        ) : (
-          <div className="w-28 h-28 rounded-full bg-white/10 flex items-center justify-center text-4xl font-bold">
-            {username?.[0]?.toUpperCase()}
-          </div>
-        )}
+  {/* GLOW */}
+  <div
+    className="absolute w-72 h-72 rounded-full blur-3xl opacity-30"
+    style={{
+      background: profile.theme_color,
+    }}
+  />
 
-        {/* USERNAME */}
-        <h1 className="mt-5 text-3xl font-bold">
-          @{profile.username}
-        </h1>
+  {/* CARD */}
+  <div className="relative z-10 flex flex-col items-center">
 
-        {/* BIO */}
-        {profile.bio && (
-          <p className="text-center text-white/80 mt-3 max-w-md">
-            {profile.bio}
-          </p>
-        )}
-
+    {/* FOTO */}
+    {profile.avatar_url ? (
+      <img
+        src={profile.avatar_url}
+        className="
+          w-32
+          h-32
+          rounded-full
+          object-cover
+          border-4
+          border-white/20
+          shadow-[0_0_60px_rgba(255,255,255,0.2)]
+        "
+      />
+    ) : (
+      <div className="w-32 h-32 rounded-full bg-white/10 flex items-center justify-center text-5xl font-bold">
+        {username?.[0]?.toUpperCase()}
       </div>
+    )}
+
+    {/* USERNAME */}
+    <h1 className="mt-6 text-4xl font-black tracking-tight">
+      @{profile.username}
+    </h1>
+
+    {/* BADGE */}
+    {profile.subscription_status ===
+      "active" && (
+      <div
+        className="
+          mt-3
+          px-4
+          py-1
+          rounded-full
+          bg-green-500/20
+          border
+          border-green-400/30
+          text-green-300
+          text-sm
+          font-semibold
+          backdrop-blur-xl
+        "
+      >
+        ✨ PRO MEMBER
+      </div>
+    )}
+
+    {/* BIO */}
+    {profile.bio && (
+      <p
+        className="
+          text-center
+          text-white/70
+          mt-5
+          max-w-xl
+          text-lg
+          leading-relaxed
+        "
+      >
+        {profile.bio}
+      </p>
+    )}
+
+  </div>
+
+</div>
 
       {/* BOTÃO DESTAQUE */}
       {profile.featured_url && (
