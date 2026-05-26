@@ -206,73 +206,170 @@ export default async function PublicPage({
 
       </div>
 
-      {/* LINKS */}
-      <div className="w-full max-w-md space-y-4">
+      {/* LINKS PREMIUM */}
+<div className="w-full max-w-2xl space-y-8">
 
-        {links.length === 0 ? (
-          <p className="text-white/70 text-center">
-            Nenhum link encontrado
-          </p>
-        ) : (
-          links.map((link, index) => (
-            <a
-              key={link.id}
-              href={`/go/${link.slug}`}
-              className={`block rounded-2xl overflow-hidden transition hover:scale-[1.02] shadow-2xl ${
-                index === 0
-                  ? "border-2 border-white"
-                  : "border border-white/10"
-              }`}
-            >
+  {links.length === 0 ? (
 
-              <div className="bg-black/40 backdrop-blur-lg p-4">
+    <p className="text-white/70 text-center">
+      Nenhum produto encontrado
+    </p>
 
-                <div className="flex items-center gap-4">
+  ) : (
 
-                  {/* IMAGEM */}
-                  {link.image_url && (
-                    <img
-                      src={link.image_url}
-                      className="w-16 h-16 rounded-xl object-cover"
-                    />
-                  )}
+    links.map((link, index) => (
 
-                  {/* TEXTO */}
-                  <div className="flex flex-col">
+      <a
+        key={link.id}
+        href={`/go/${link.slug}`}
+        className="
+          group
+          relative
+          block
+          overflow-hidden
+          rounded-3xl
+          transition-all
+          duration-300
+          hover:scale-[1.02]
+        "
+      >
 
-                    {/* BADGE */}
-                    {index === 0 && (
-                      <span className="text-xs mb-1">
-                        🔥 Recomendado
-                      </span>
-                    )}
+        {/* GLOW */}
+        <div
+          className="
+            absolute
+            inset-0
+            opacity-0
+            group-hover:opacity-100
+            blur-2xl
+            transition
+          "
+          style={{
+            background: profile.theme_color,
+          }}
+        />
 
-                    <span
-                      className="font-semibold text-lg"
-                      style={{
-                        color:
-                          profile?.product_text_color ||
-                          "#000000",
-                      }}
-                   >
-                      {link.title}
-                    </span>
+        {/* CARD */}
+        <div
+          className="
+            relative
+            border
+            border-white/10
+            bg-white/5
+            backdrop-blur-2xl
+            rounded-3xl
+            overflow-hidden
+            shadow-2xl
+          "
+        >
 
-                    <span className="text-xs text-white/60">
-                      {link.clicks} cliques
-                    </span>
+          {/* IMAGEM */}
+          {link.image_url && (
 
-                  </div>
+            <div className="relative">
 
+              <img
+                src={link.image_url}
+                className="
+                  w-full
+                  h-64
+                  object-cover
+                  transition
+                  duration-500
+                  group-hover:scale-105
+                "
+              />
+
+              {/* OVERLAY */}
+              <div className="
+                absolute
+                inset-0
+                bg-gradient-to-t
+                from-black/80
+                to-transparent
+              " />
+
+              {/* BADGE */}
+              {index === 0 && (
+
+                <div className="
+                  absolute
+                  top-4
+                  left-4
+                  px-4
+                  py-1
+                  rounded-full
+                  bg-green-500
+                  text-black
+                  text-sm
+                  font-bold
+                  shadow-xl
+                ">
+                  🔥 EM ALTA
                 </div>
 
-              </div>
+              )}
 
-            </a>
-          ))
-        )}
+            </div>
 
-      </div>
+          )}
+
+          {/* CONTEÚDO */}
+          <div className="p-6">
+
+            {/* TÍTULO */}
+            <h2
+              className="
+                text-2xl
+                font-black
+                leading-tight
+              "
+              style={{
+                color:
+                  profile?.product_text_color ||
+                  "#ffffff",
+              }}
+            >
+              {link.title}
+            </h2>
+
+            {/* CLIQUES */}
+            <p className="text-white/50 mt-2">
+              {link.clicks} cliques
+            </p>
+
+            {/* BOTÃO */}
+            <div
+              className="
+                mt-6
+                w-full
+                rounded-2xl
+                py-4
+                text-center
+                font-bold
+                text-lg
+                transition
+                group-hover:scale-[1.01]
+              "
+              style={{
+                background: profile.theme_color,
+                color: "#fff",
+              }}
+            >
+              Comprar Agora →
+            </div>
+
+          </div>
+
+        </div>
+
+      </a>
+
+    ))
+
+  )}
+
+</div>
 
       {/* FOOTER */}
       <div className="mt-12 text-xs text-white/50">
