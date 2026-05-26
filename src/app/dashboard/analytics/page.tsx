@@ -1,6 +1,5 @@
 "use client";
 
-import StatsCharts from "@/components/StatsCharts";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 
@@ -113,8 +112,6 @@ if (
 
   return (
   <div className="p-8 text-white min-h-screen bg-black">
-
-    <StatsCharts links={links} />
 
     {/* resto da página */}
 
