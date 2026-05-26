@@ -265,6 +265,8 @@ setAvatarUrl(data.publicUrl);
               onChange={(e) =>
                 setUsername(
                   e.target.value
+                  .toLowerCase()
+                  .replace(/\s+/g, "_")
                 )
               }
               className="w-full bg-zinc-800 border border-zinc-700 rounded-2xl p-4"
