@@ -15,47 +15,35 @@ export async function POST(req: Request) {
       JSON.stringify(body, null, 2)
     );
 
-    const event = body.event;
     const payment = body.payment;
 
-    if (!payment) {
+    if (!payment?.externalReference) {
       return NextResponse.json({
-        error: "Pagamento não encontrado",
+        error: "Sem externalReference",
       });
     }
 
-    const userId =
-      payment.externalReference;
+    const userId = payment.externalReference;
 
-    if (!userId) {
-      return NextResponse.json({
-        error: "externalReference não encontrado",
-      });
-    }
-
-    console.log(
-      "USUÁRIO:",
-      userId
-    );
-
-    // 🚀 PAGAMENTO APROVADO
+    // =========================
+    // PAGAMENTO CONFIRMADO
+    // =========================
     if (
-      event === "PAYMENT_RECEIVED" ||
-      event === "PAYMENT_CONFIRMED"
+      body.event === "PAYMENT_RECEIVED" ||
+      body.event === "PAYMENT_CONFIRMED"
     ) {
 
-      console.log(
-        "LIBERANDO PRO"
-      );
+      console.log("LIBERANDO PRO:", userId);
 
-      const { error } =
-        await supabase
-          .from("profiles")
-          .update({
-            is_pro: true,
-            subscription_status: "active",
-          })
-          .eq("id", userId);
+      const { error } = await supabase
+        .from("profiles")
+        .update({
+          is_pro: true,
+          subscription_status: "active",
+          subscription_plan: "pro",
+          subscription_end_date: payment.dueDate,
+        })
+        .eq("id", userId);
 
       if (error) {
         console.log(error);
@@ -65,30 +53,27 @@ export async function POST(req: Request) {
         });
       }
 
-      console.log(
-        "PRO LIBERADO"
-      );
+      console.log("USUÁRIO LIBERADO");
     }
 
-    // 🚀 PAGAMENTO VENCIDO / CANCELADO
+    // =========================
+    // ASSINATURA CANCELADA
+    // =========================
     if (
-      event === "PAYMENT_OVERDUE" ||
-      event === "PAYMENT_DELETED" ||
-      event === "PAYMENT_REFUNDED"
+      body.event === "PAYMENT_DELETED" ||
+      body.event === "PAYMENT_OVERDUE"
     ) {
 
-      console.log(
-        "REMOVENDO PRO"
-      );
+      console.log("REMOVENDO PRO:", userId);
 
-      const { error } =
-        await supabase
-          .from("profiles")
-          .update({
-            is_pro: false,
-            subscription_status: "inactive",
-          })
-          .eq("id", userId);
+      const { error } = await supabase
+        .from("profiles")
+        .update({
+          is_pro: false,
+          subscription_status: "inactive",
+          subscription_plan: "free",
+        })
+        .eq("id", userId);
 
       if (error) {
         console.log(error);
@@ -98,9 +83,7 @@ export async function POST(req: Request) {
         });
       }
 
-      console.log(
-        "PRO REMOVIDO"
-      );
+      console.log("PRO REMOVIDO");
     }
 
     return NextResponse.json({
@@ -108,12 +91,10 @@ export async function POST(req: Request) {
     });
 
   } catch (error) {
-
     console.log(error);
 
     return NextResponse.json({
       error: "Webhook error",
     });
-
   }
 }
