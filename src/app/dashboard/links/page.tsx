@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import Sidebar from "@/components/dashboard/Sidebar";
 import MobilePreview from "@/components/dashboard/MobilePreview";
+import { isProUser } from "@/lib/isPro";
 
 export default function LinksPage() {
   const [links, setLinks] = useState<any[]>([]);
@@ -243,6 +244,18 @@ const handleCreateProduct = async () => {
 
     if (!title || !url) {
       alert("Preencha os campos");
+      return;
+    }
+
+    // 🚀 verificar plano
+    const pro = await isProUser();
+
+    if (!pro && links.length >= 3) {
+
+      alert(
+        "Plano FREE permite apenas 3 links. Assine o PRO 🚀"
+      );
+
       return;
     }
 
