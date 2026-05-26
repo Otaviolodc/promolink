@@ -514,46 +514,34 @@ const totalClicks =
 
             <button
               onClick={() => {
-                setEditingLink(null);
 
-                setTitle("");
-                setUrl("");
-                setImageUrl("");
+                 if (!profile?.is_pro) {
 
-                setShowModal(true);
-              }}
-              className="bg-green-500 hover:bg-green-400 transition text-black px-6 py-3 rounded-xl font-semibold"
-            >
-              + Novo Link
-            <button
-              onClick={() => {
+                    alert(
+                      "Recurso exclusivo PRO 🚀"
+                    );
 
-                if (!profile?.is_pro) {
+                    return;
+                 }
 
-                   alert(
-                    "Recurso exclusivo PRO 🚀"
-                  );
+                 setShowProductModal(true);
 
-                  return;
-                }
+                }}
+                className="
+                  bg-white
+                  hover:bg-zinc-200
+                  transition
+                  text-black
+                  px-6
+                  py-3
+                  rounded-xl
+                  font-semibold
+                "
+>
 
-                setShowProductModal(true);
+               + Novo Produto
 
-              }}
-              className="
-                bg-white
-                hover:bg-zinc-200
-                transition
-                text-black
-                px-6
-                py-3
-                rounded-xl
-                font-semibold
-              "
-            >
-
-              + Novo Produto
-            </button>
+             </button>
 
           </div>
 
