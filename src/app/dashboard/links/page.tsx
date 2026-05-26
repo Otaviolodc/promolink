@@ -189,6 +189,16 @@ const handleProductImageUpload = async (
 
 // 🚀 criar produto destaque
 const handleCreateProduct = async () => {
+  
+  if (!profile?.is_pro) {
+
+  alert(
+    "Produtos destaque são exclusivos PRO 🚀"
+  );
+
+  return;
+}
+
   const response = await fetch(
     "/api/products",
     {
@@ -515,14 +525,33 @@ const totalClicks =
               className="bg-green-500 hover:bg-green-400 transition text-black px-6 py-3 rounded-xl font-semibold"
             >
               + Novo Link
-            </button>
-
             <button
-              onClick={() =>
-                setShowProductModal(true)
-              }
-              className="bg-white hover:bg-zinc-200 transition text-black px-6 py-3 rounded-xl font-semibold"
-          >
+              onClick={() => {
+
+                if (!profile?.is_pro) {
+
+                   alert(
+                    "Recurso exclusivo PRO 🚀"
+                  );
+
+                  return;
+                }
+
+                setShowProductModal(true);
+
+              }}
+              className="
+                bg-white
+                hover:bg-zinc-200
+                transition
+                text-black
+                px-6
+                py-3
+                rounded-xl
+                font-semibold
+              "
+            >
+
               + Novo Produto
             </button>
 
@@ -539,7 +568,11 @@ const totalClicks =
             </p>
 
             <h2 className="text-xl font-semibold mt-1">
-              Ver planos →
+              
+              {profile?.is_pro
+                ? "Plano PRO 🚀"
+                : "Plano FREE"}
+
             </h2>
 
           </a>
