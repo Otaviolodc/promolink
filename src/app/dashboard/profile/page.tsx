@@ -179,7 +179,8 @@ setAvatarUrl(data.publicUrl);
     setLoading(false);
 
     if (error) {
-      alert("Erro ao salvar");
+      alert(error.message);
+      console.log(error);
       return;
     }
 
