@@ -503,6 +503,7 @@ const totalClicks =
           <div className="flex items-center justify-between mb-10">
 
             <div>
+
               <h1 className="text-3xl font-bold">
                 Dashboard
               </h1>
@@ -510,40 +511,76 @@ const totalClicks =
               <p className="text-gray-400 mt-1">
                 Gerencie seus links
               </p>
-            </div>
 
+          </div>
+
+          {/* BOTÕES */}
+          <div className="flex gap-3">
+
+            {/* NOVO LINK */}
             <button
               onClick={() => {
 
-                 if (!profile?.is_pro) {
+                setEditingLink(null);
 
-                    alert(
-                      "Recurso exclusivo PRO 🚀"
-                    );
+                setTitle("");
+                setUrl("");
+                setImageUrl("");
 
-                    return;
-                 }
+                setShowModal(true);
 
-                 setShowProductModal(true);
+              }}
+              className="
+                bg-green-500
+                hover:bg-green-400
+                transition
+                text-black
+                px-6
+                py-3
+                rounded-xl
+                font-semibold
+              "
+            >
 
-                }}
-                className="
-                  bg-white
-                  hover:bg-zinc-200
-                  transition
-                  text-black
-                  px-6
-                  py-3
-                  rounded-xl
-                  font-semibold
-                "
->
+              + Novo Link
 
-               + Novo Produto
+            </button>
 
-             </button>
+    {/* NOVO PRODUTO */}
+    <button
+      onClick={() => {
 
-          </div>
+        if (!profile?.is_pro) {
+
+          alert(
+            "Recurso exclusivo PRO 🚀"
+          );
+
+          return;
+        }
+
+        setShowProductModal(true);
+
+      }}
+      className="
+        bg-white
+        hover:bg-zinc-200
+        transition
+        text-black
+        px-6
+        py-3
+        rounded-xl
+        font-semibold
+      "
+    >
+
+      + Novo Produto
+
+    </button>
+
+  </div>
+
+</div>
 
           {/* PLANO */}
           <a
