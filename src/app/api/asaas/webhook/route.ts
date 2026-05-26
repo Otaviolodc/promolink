@@ -3,8 +3,11 @@ import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 
 const supabase = createClient(
+
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
+
   process.env.SUPABASE_SERVICE_ROLE_KEY!
+
 );
 
 export async function POST(req: Request) {
@@ -13,34 +16,50 @@ export async function POST(req: Request) {
 
     const body = await req.json();
 
-    console.log("Webhook recebido:", body);
+    console.log(
+      "WEBHOOK RECEBIDO:",
+      JSON.stringify(body, null, 2)
+    );
 
-    // pagamento confirmado
+    // 🚀 pagamento confirmado
     if (
-      body.event === "PAYMENT_CONFIRMED"
+      body.event === "PAYMENT_RECEIVED"
     ) {
 
-      const email =
-        body.payment.customer.email;
+      const payment =
+        body.payment;
+
+      const userId =
+        payment.externalReference;
 
       console.log(
-        "Liberando PRO para:",
-        email
+        "LIBERANDO PRO:",
+        userId
       );
 
+      // 🚀 atualizar usuário
       const { error } =
         await supabase
           .from("profiles")
           .update({
             is_pro: true,
           })
-          .eq("email", email);
+          .eq("id", userId);
 
       if (error) {
 
         console.log(error);
 
+        return NextResponse.json({
+          error:
+            error.message,
+        });
+
       }
+
+      console.log(
+        "USUÁRIO LIBERADO"
+      );
 
     }
 
@@ -52,14 +71,9 @@ export async function POST(req: Request) {
 
     console.log(error);
 
-    return NextResponse.json(
-      {
-        error: "Erro webhook",
-      },
-      {
-        status: 500,
-      }
-    );
+    return NextResponse.json({
+      error: "Webhook error",
+    });
 
   }
 
