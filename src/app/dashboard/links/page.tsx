@@ -583,25 +583,81 @@ const totalClicks =
 </div>
 
           {/* PLANO */}
-          <a
-            href="/pricing"
-            className="block bg-zinc-900 border border-zinc-800 rounded-2xl p-5 mb-6 hover:border-green-500 transition"
-          >
+<a
+  href="/pricing"
+  className="block bg-zinc-900 border border-zinc-800 rounded-2xl p-5 mb-6 hover:border-green-500 transition"
+>
 
-            <p className="text-sm text-gray-400">
-              Plano Atual
-            </p>
+  <div className="flex items-center justify-between">
 
-            <h2 className="text-xl font-semibold mt-1">
-              
-              {profile?.is_pro
-                ? "Plano PRO 🚀"
-                : "Plano FREE"}
+    <div>
 
-            </h2>
+      <p className="text-sm text-gray-400">
+        Plano Atual
+      </p>
 
-          </a>
+      <h2 className="text-xl font-semibold mt-1">
 
+        {profile?.is_pro
+          ? "Plano PRO 🚀"
+          : "Plano FREE"}
+
+      </h2>
+
+    </div>
+
+    {!profile?.is_pro && (
+
+      <div className="text-right">
+
+        <p className="text-sm text-gray-400">
+          Links usados
+        </p>
+
+        <h2 className="text-2xl font-bold text-green-400">
+          {links.length}/3
+        </h2>
+
+      </div>
+
+    )}
+
+  </div>
+
+  {!profile?.is_pro &&
+    links.length >= 3 && (
+
+    <div className="mt-5 bg-green-500/10 border border-green-500 rounded-2xl p-4">
+
+      <p className="text-green-400 font-semibold">
+        Você atingiu o limite FREE 🚀
+      </p>
+
+      <p className="text-sm text-gray-400 mt-1">
+        Assine o PRO para links ilimitados.
+      </p>
+
+      <button
+        className="
+          mt-4
+          bg-green-500
+          hover:bg-green-400
+          transition
+          text-black
+          px-5
+          py-3
+          rounded-2xl
+          font-bold
+        "
+      >
+        Upgrade PRO 🚀
+      </button>
+
+    </div>
+
+  )}
+
+</a>
           {/* LINK PÚBLICO */}
           <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 mb-8">
 
