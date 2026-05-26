@@ -25,14 +25,34 @@ export default function AnalyticsPage() {
   const fetchAnalytics = async () => {
     try {
       // 👤 usuário
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+const {
+  data: { user },
+} = await supabase.auth.getUser();
 
-      if (!user) {
-        setLoading(false);
-        return;
-      }
+if (!user) {
+  setLoading(false);
+  return;
+}
+
+// 🚀 verificar plano
+const { data: profile } =
+  await supabase
+    .from("profiles")
+    .select("*")
+    .eq("id", user.id)
+    .single();
+
+if (
+  profile?.subscription_status !==
+  "active"
+) {
+
+  window.location.href =
+    "/pricing";
+
+  return;
+
+}
 
       // 🔗 links
       const { data: linksData } = await supabase
@@ -44,16 +64,17 @@ export default function AnalyticsPage() {
 
       // 📈 analytics diário
       const { data: dailyData } = await supabase
-        .from("link_clicks_daily")
-        .select(`
-          *,
-          links (
-            title
-          )
-        `)
-        .order("date", { ascending: true });
-
-      // 🔥 formatar gráfico
+  .from("link_clicks_daily")
+  .select(`
+    *,
+    links!inner (
+      title,
+      user_id
+    )
+  `)
+  .eq("links.user_id", user.id)
+  .order("date", { ascending: true });
+  
       const formatted =
         dailyData?.map((item: any) => ({
           date: item.date,
