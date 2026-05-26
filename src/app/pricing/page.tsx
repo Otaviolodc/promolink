@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 
+import { supabase } from "@/lib/supabase";
+
 export default function PricingPage() {
 
   const [pixData, setPixData] =
@@ -13,10 +15,26 @@ export default function PricingPage() {
   const handleSubscribe =
     async () => {
 
-      setLoading(true);
-
       try {
 
+        setLoading(true);
+
+        // 🚀 pegar usuário logado
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+
+        if (!user) {
+
+          alert("Usuário não autenticado");
+
+          setLoading(false);
+
+          return;
+
+        }
+
+        // 🚀 criar pagamento
         const response =
           await fetch(
             "/api/asaas/create-payment",
@@ -29,10 +47,12 @@ export default function PricingPage() {
               },
 
               body: JSON.stringify({
-                name: "Usuário PromoLink",
+
+                name:
+                  user.email || "Usuário",
 
                 email:
-                  "teste@promolink.com",
+                  user.email,
 
                 cpfCnpj:
                   "14895719650",
@@ -40,7 +60,8 @@ export default function PricingPage() {
                 value: 29.90,
 
                 userId:
-                  "user_teste",
+                  user.id,
+
               }),
             }
           );
@@ -50,11 +71,26 @@ export default function PricingPage() {
 
         console.log(data);
 
+        // 🚨 erro API
+        if (data.error) {
+
+          alert(data.error);
+
+          setLoading(false);
+
+          return;
+
+        }
+
         setPixData(data);
 
       } catch (error) {
 
         console.log(error);
+
+        alert(
+          "Erro ao gerar PIX"
+        );
 
       }
 
@@ -79,10 +115,13 @@ export default function PricingPage() {
         <div className="bg-zinc-800 rounded-2xl p-6 mb-8">
 
           <h2 className="text-5xl font-bold">
+
             R$ 29
+
             <span className="text-lg text-gray-400">
               /mês
             </span>
+
           </h2>
 
         </div>
@@ -115,7 +154,7 @@ export default function PricingPage() {
             <textarea
               value={pixData.payload || ""}
               readOnly
-              className="w-full bg-zinc-800 mt-6 p-4 rounded-2xl text-sm h-32"
+              className="w-full bg-zinc-800 mt-6 p-4 rounded-2xl text-sm h-32 text-white"
             />
 
           </div>
