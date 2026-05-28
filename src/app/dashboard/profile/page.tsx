@@ -495,43 +495,6 @@ setAvatarUrl(data.publicUrl);
 
 </div>
 
-  <select
-    value={template}
-    onChange={(e) =>
-      setTemplate(e.target.value)
-    }
-    className="
-      w-full
-      bg-zinc-800
-      border
-      border-zinc-700
-      rounded-2xl
-      p-4
-    "
-  >
-
-    <option value="dark">
-      Dark
-    </option>
-
-    <option value="glass">
-      Glass
-    </option>
-
-    <option value="neon">
-      Neon
-    </option>
-
-    <option value="luxury">
-      Luxury
-    </option>
-
-    <option value="cyberpunk">
-      Cyberpunk
-    </option>
-
-  </select>
-
         {/* BOTÃO */}
         <button
           onClick={handleSave}
