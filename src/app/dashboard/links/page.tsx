@@ -1,5 +1,11 @@
 "use client";
 
+import {
+  DragDropContext,
+  Droppable,
+  Draggable,
+} from "@hello-pangea/dnd";
+
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import Sidebar from "@/components/dashboard/Sidebar";
@@ -72,8 +78,8 @@ export default function LinksPage() {
       .from("links")
       .select("*")
       .eq("user_id", user.id)
-      .order("created_at", {
-        ascending: false,
+      .order("position", {
+        ascending: true,
       });
 
     setLinks(linksData || []);
@@ -488,6 +494,46 @@ const totalClicks =
   const topLink = [...links].sort(
     (a, b) => b.clicks - a.clicks
   )[0];
+
+  const handleDragEnd = async (
+  result: any
+) => {
+
+  if (!result.destination) return;
+
+  const items = Array.from(links);
+
+  const [reorderedItem] =
+    items.splice(
+      result.source.index,
+      1
+    );
+
+  items.splice(
+    result.destination.index,
+    0,
+    reorderedItem
+  );
+
+  setLinks(items);
+
+  // 🚀 salvar no banco
+  const updates = items.map(
+    (item, index) => {
+
+      return supabase
+        .from("links")
+        .update({
+          position: index + 1,
+        })
+        .eq("id", item.id);
+
+    }
+  );
+
+  await Promise.all(updates);
+
+};
 
   return (
     <div className="flex bg-black text-white min-h-screen">
@@ -906,134 +952,156 @@ const totalClicks =
             </div>
 
             {links.length === 0 ? (
-              <div className="p-16 text-center text-gray-500">
-                Nenhum link criado
-              </div>
-            ) : (
-              links.map((link) => (
-                <div
-                  key={link.id}
-                  className="
-                    flex
-                    items-center
-                    justify-between
-                    p-6
-                    border
-                    border border-zinc-800 
-                    rounded-3xl 
-                    mb-4
-                    hover:bg-zinc-800/30
-                    hover:scale-[1.01]
-                    hover:border-green-500/20
-                    transition-all
-                    duration-300
-                  "
-                >
 
-                  {/* ESQUERDA */}
-                  <div className="flex items-center gap-4">
+  <div className="p-16 text-center text-gray-500">
+    Nenhum link criado
+  </div>
 
-                    {/* FOTO */}
-                    {link.image_url ? (
-                      <div className="relative">
+) : (
 
-                      <img
-                        src={link.image_url}
-                        className="
-                          w-24
-                          h-24
-                          object-cover
-                          rounded-3xl
-                          border
-                          border-zinc-700
-                          shadow-2xl
-                        "
-                    />
+<DragDropContext
+  onDragEnd={handleDragEnd}
+>
 
-                      <div
-                        className="
-                          absolute
-                          inset-0
-                          rounded-3xl
-                          bg-gradient-to-t
-                          from-black/20
-                          to-transparent
-                        "
-                    />
+<Droppable droppableId="links">
 
-                 </div>
-              ) : (
-                 <div className="
-                   w-24
-                   h-24
-                   rounded-3xl
-                   bg-zinc-800
-                   flex
-                   items-center
-                   justify-center
-                   text-3xl
-                 ">
-                   📦
-                </div>
-              )}
+{(provided) => (
 
-                    {/* TEXTO */}
-                    <div className="max-w-[600px]">
+<div
+  {...provided.droppableProps}
+  ref={provided.innerRef}
+>
 
-                      <h3 className="font-semibold text-lg line-clamp-2">
-                        {link.title}
-                      </h3>
+{links.map((link, index) => (
 
-                      <p className="text-gray-400 text-sm mt-1">
-                        {link.clicks} cliques
-                      </p>
+<Draggable
+  key={link.id}
+  draggableId={link.id}
+  index={index}
+>
 
-                      <p className="text-green-400 text-sm mt-1 truncate">
-                        /go/{link.slug}
-                      </p>
+{(provided) => (
 
-                    </div>
+<div
+  ref={provided.innerRef}
+  {...provided.draggableProps}
+  {...provided.dragHandleProps}
+  className="
+    flex
+    items-center
+    justify-between
+    p-6
+    border
+    border-zinc-800
+    rounded-3xl
+    mb-4
+    hover:bg-zinc-800/30
+    hover:border-green-500/20
+    transition-all
+  "
+>
 
-                  </div>
+{/* ESQUERDA */}
+<div className="flex items-center gap-4">
 
-                  {/* BOTÕES */}
-                  <div className="flex items-center gap-3">
+{link.image_url ? (
 
-                    <button
-                      onClick={() =>
-                        navigator.clipboard.writeText(
-                          `${window.location.origin}/go/${link.slug}`
-                        )
-                      }
-                      className="bg-zinc-800 hover:bg-zinc-700 px-4 py-2 rounded-xl text-sm"
-                    >
-                      Copiar
-                    </button>
+<img
+  src={link.image_url}
+  className="
+    w-24
+    h-24
+    object-cover
+    rounded-3xl
+  "
+/>
 
-                    <button
-                      onClick={() =>
-                        handleOpenEdit(link)
-                      }
-                      className="bg-blue-500 hover:bg-blue-400 text-black px-4 py-2 rounded-xl text-sm font-semibold"
-                    >
-                      Editar
-                    </button>
+) : (
 
-                    <button
-                      onClick={() =>
-                        handleDelete(link.id)
-                      }
-                      className="bg-red-500 hover:bg-red-400 text-black px-4 py-2 rounded-xl text-sm font-semibold"
-                    >
-                      Remover
-                    </button>
+<div
+  className="
+    w-24
+    h-24
+    rounded-3xl
+    bg-zinc-800
+    flex
+    items-center
+    justify-center
+  "
+>
+📦
+</div>
 
-                  </div>
+)}
 
-                </div>
-              ))
-            )}
+<div>
 
+<h3 className="font-semibold text-lg">
+  {link.title}
+</h3>
+
+<p className="text-gray-400 text-sm">
+  {link.clicks} cliques
+</p>
+
+</div>
+
+</div>
+
+{/* BOTÕES */}
+<div className="flex items-center gap-3">
+
+<button
+  onClick={() =>
+    navigator.clipboard.writeText(
+      `${window.location.origin}/go/${link.slug}`
+    )
+  }
+  className="bg-zinc-800 hover:bg-zinc-700 px-4 py-2 rounded-xl text-sm"
+>
+  Copiar
+</button>
+
+<button
+  onClick={() =>
+    handleOpenEdit(link)
+  }
+  className="bg-blue-500 hover:bg-blue-400 text-black px-4 py-2 rounded-xl text-sm font-semibold"
+>
+  Editar
+</button>
+
+<button
+  onClick={() =>
+    handleDelete(link.id)
+  }
+  className="bg-red-500 hover:bg-red-400 text-black px-4 py-2 rounded-xl text-sm font-semibold"
+>
+  Remover
+</button>
+
+</div>
+
+</div>
+
+)}
+
+</Draggable>
+
+))}
+
+{provided.placeholder}
+
+</div>
+
+)}
+
+</Droppable>
+
+</DragDropContext>
+
+)}
+              
           </div>
 
         </div>
