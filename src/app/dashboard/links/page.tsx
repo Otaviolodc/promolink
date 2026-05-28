@@ -762,7 +762,7 @@ const totalClicks =
 
           </div>
 
-          {/* 🔥 TRENDING MERCADO LIVRE */}
+          {/* 🔥 PRODUTOS EM DESTAQUE */}
 <div className="mb-10">
 
   <div className="flex items-center justify-between mb-5">
@@ -781,173 +781,246 @@ const totalClicks =
 
   </div>
 
-  <div className="flex gap-5 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide">
+  <div className="relative">
 
-    {products.map((item, index) => (
+    {/* SETA ESQUERDA */}
+    <button
+      onClick={() => {
+        const container =
+          document.getElementById(
+            "products-carousel"
+          );
 
-      <div
-        key={index}
-        className="
-          min-w-[350px]
-          max-w-[350px]
-          bg-zinc-900
-          border
-          border-zinc-800
-          rounded-3xl
-          overflow-hidden
-          hover:border-green-500
-          hover:scale-[1.02]
-          transition-all
-          duration-300
-          snap-start
-        "
-      >
+        container?.scrollBy({
+          left: -1000,
+          behavior: "smooth",
+        });
+      }}
+      className="
+        absolute
+        left-2
+        top-1/2
+        -translate-y-1/2
+        z-20
+        bg-black/80
+        hover:bg-black
+        w-12
+        h-12
+        rounded-full
+        text-white
+        text-2xl
+        backdrop-blur-xl
+      "
+    >
+      ←
+    </button>
 
-        {/* IMAGEM */}
-        <div className="relative">
+    {/* SETA DIREITA */}
+    <button
+      onClick={() => {
+        const container =
+          document.getElementById(
+            "products-carousel"
+          );
 
-          <img
-            src={
-              item.image_url ||
-              "/placeholder.png"
-            }
-            alt={item.title}
-            className="w-full h-40 object-cover"
-/>
-          {/* DESCONTO */}
-          {item.discount && (
-            <div className="absolute top-3 left-3 bg-red-500 text-white text-xs px-3 py-1 rounded-full font-bold">
-              -{item.discount}%
-            </div>
-          )}
+        container?.scrollBy({
+          left: 1000,
+          behavior: "smooth",
+        });
+      }}
+      className="
+        absolute
+        right-2
+        top-1/2
+        -translate-y-1/2
+        z-20
+        bg-black/80
+        hover:bg-black
+        w-12
+        h-12
+        rounded-full
+        text-white
+        text-2xl
+        backdrop-blur-xl
+      "
+    >
+      →
+    </button>
 
-          {/* MARKETPLACE */}
-          <div className="absolute top-3 right-3 bg-black/80 backdrop-blur-sm text-white text-xs px-3 py-1 rounded-full">
-            {item.marketplace || "PromoLink"}
-          </div>
+    {/* CARROSSEL */}
+    <div
+      id="products-carousel"
+      className="
+        flex
+        gap-5
+        overflow-x-hidden
+        scroll-smooth
+      "
+    >
 
-        </div>
+      {products.map((item, index) => (
 
-        {/* CONTEÚDO */}
-        <div className="p-5">
+        <div
+          key={index}
+          className="
+            min-w-[320px]
+            max-w-[320px]
+            bg-zinc-900
+            border
+            border-zinc-800
+            rounded-3xl
+            overflow-hidden
+            hover:border-green-500
+            hover:scale-[1.02]
+            transition-all
+            duration-300
+          "
+        >
 
-          <h3 className="font-semibold text-base line-clamp-2 min-h-[48px]">
-            {item.title}
-          </h3>
+          {/* IMAGEM */}
+          <div className="relative">
 
-          <p className="text-sm text-gray-400 mt-2">
-
-            {
-              clicks.filter(
-                (click) =>
-                  click.product_id === item.id
-              ).length
-            }
-
-            {" "}cliques
-
-         </p>
-
-          {/* PREÇO */}
-          <div className="mt-4 flex items-center gap-2">
-
-            <span className="text-2xl font-bold text-green-400">
-              R$ {item.price}
-            </span>
-
-            {item.oldPrice && (
-              <span className="text-sm text-gray-500 line-through">
-                {item.oldPrice}
-              </span>
-            )}
-
-          </div>
-
-          {/* BADGES */}
-          <div className="flex gap-2 mt-4 flex-wrap">
-
-            {item.viral && (
-              <span className="bg-green-500/20 text-green-400 text-xs px-2 py-1 rounded-full">
-                Viral 🚀
-              </span>
-            )}
-
-            {item.fastSelling && (
-              <span className="bg-orange-500/20 text-orange-400 text-xs px-2 py-1 rounded-full">
-                Vendendo muito 🔥
-              </span>
-            )}
-
-          </div>
-
-          {/* BOTÕES */}
-          <div className="flex gap-2 mt-5">
-
-            <a
-              href={item.affiliate_url}
-              target="_blank"
-
-              onClick={async () => {
-
-                await fetch("/api/click", {
-                  method: "POST",
-
-                  headers: {
-                    "Content-Type":
-                      "application/json",
-                  },
-
-                  body: JSON.stringify({
-                    product_id: item.id,
-
-                    device:
-                      navigator.userAgent,
-
-                    country: "Brasil",
-                 }),
-               });
-
-             }}
-
-              className="flex-1 bg-zinc-800 hover:bg-zinc-700 transition text-center py-3 rounded-2xl text-sm font-semibold"
-            >
-              Ver Produto
-            </a>
-
-            <button
-              onClick={() =>
-                handleImportTrend(item)
+            <img
+              src={
+                item.image_url ||
+                "/placeholder.png"
               }
-              className="flex-1 bg-green-500 hover:bg-green-400 transition text-black py-3 rounded-2xl text-sm font-bold"
-            >
-              + PromoLink
-             </button>
+              alt={item.title}
+              className="
+                w-full
+                h-52
+                object-cover
+              "
+            />
 
-             <button
-               onClick={() =>
-                 handleEditProduct(item)
-               }
-              className="flex-1 bg-blue-500 hover:bg-blue-400 transition text-black py-3 rounded-2xl text-sm font-bold"
-            >
-              Editar
-            </button>
+            {/* MARKETPLACE */}
+            <div className="absolute top-3 right-3 bg-black/80 backdrop-blur-sm text-white text-xs px-3 py-1 rounded-full">
+              {item.marketplace || "PromoLink"}
+            </div>
 
-            <button
-              onClick={() =>
-                handleDeleteProduct(item.id)
-             }
-              className="flex-1 bg-red-500 hover:bg-red-400 transition text-black py-3 rounded-2xl text-sm font-bold"
-            >
-              Remover
-            </button>
+          </div>
+
+          {/* CONTEÚDO */}
+          <div className="p-5">
+
+            <h3 className="font-semibold text-lg line-clamp-2 min-h-[56px]">
+              {item.title}
+            </h3>
+
+            <p className="text-sm text-gray-400 mt-2">
+
+              {
+                clicks.filter(
+                  (click) =>
+                    click.product_id === item.id
+                ).length
+              }
+
+              {" "}cliques
+
+            </p>
+
+            {/* PREÇO */}
+            <div className="mt-4">
+
+              <span className="text-3xl font-bold text-green-400">
+                R$ {item.price}
+              </span>
+
+            </div>
+
+            {/* BOTÕES */}
+            <div className="flex gap-2 mt-5">
+
+              <a
+                href={item.affiliate_url}
+                target="_blank"
+                className="
+                  flex-1
+                  bg-zinc-800
+                  hover:bg-zinc-700
+                  transition
+                  text-center
+                  py-3
+                  rounded-2xl
+                  text-sm
+                  font-semibold
+                "
+              >
+                Ver Produto
+              </a>
+
+              <button
+                onClick={() =>
+                  handleImportTrend(item)
+                }
+                className="
+                  flex-1
+                  bg-green-500
+                  hover:bg-green-400
+                  transition
+                  text-black
+                  py-3
+                  rounded-2xl
+                  text-sm
+                  font-bold
+                "
+              >
+                + PromoLink
+              </button>
+
+            </div>
+
+            {/* AÇÕES */}
+            <div className="flex gap-2 mt-3">
+
+              <button
+                onClick={() =>
+                  handleEditProduct(item)
+                }
+                className="
+                  flex-1
+                  bg-blue-500
+                  hover:bg-blue-400
+                  transition
+                  text-black
+                  py-2
+                  rounded-2xl
+                  text-sm
+                  font-bold
+                "
+              >
+                Editar
+              </button>
+
+              <button
+                onClick={() =>
+                  handleDeleteProduct(item.id)
+                }
+                className="
+                  flex-1
+                  bg-red-500
+                  hover:bg-red-400
+                  transition
+                  text-black
+                  py-2
+                  rounded-2xl
+                  text-sm
+                  font-bold
+                "
+              >
+                Remover
+              </button>
+
+            </div>
 
           </div>
 
         </div>
 
-      </div>
+      ))}
 
-    ))}
+    </div>
 
   </div>
 
