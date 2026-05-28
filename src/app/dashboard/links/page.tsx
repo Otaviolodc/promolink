@@ -781,13 +781,26 @@ const totalClicks =
 
   </div>
 
-  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+  <div className="flex gap-5 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide">
 
     {products.map((item, index) => (
 
       <div
         key={index}
-        className="bg-zinc-900 border border-zinc-800 rounded-3xl overflow-hidden hover:border-green-500 transition"
+        className="
+          min-w-[350px]
+          max-w-[350px]
+          bg-zinc-900
+          border
+          border-zinc-800
+          rounded-3xl
+          overflow-hidden
+          hover:border-green-500
+          hover:scale-[1.02]
+          transition-all
+          duration-300
+          snap-start
+        "
       >
 
         {/* IMAGEM */}
