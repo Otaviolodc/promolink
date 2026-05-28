@@ -1,136 +1,241 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { supabase } from '@/lib/supabase'
+import { useState } from "react";
 
-interface ThemeCustomizerProps {
-  profile: any
-  onSuccess: () => void
-}
+import { supabase } from "@/lib/supabase";
 
-export default function ThemeCustomizer({ profile, onSuccess }: ThemeCustomizerProps) {
-  const [loading, setLoading] = useState(false)
-  const [formData, setFormData] = useState({
-    theme_color: profile?.theme_color || '#6366f1',
-    background_color: profile?.background_color || '#faf7ff',
-    button_style: profile?.button_style || 'rounded'
-  })
+export default function ThemeCustomizer({
+  profile,
+  reloadProfile,
+}: any) {
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
+  const [loading, setLoading] =
+    useState(false);
+
+  async function updateTheme(
+    field: string,
+    value: string
+  ) {
 
     try {
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) throw new Error('Not authenticated')
 
-      const { error } = await supabase
-        .from('profiles')
+      setLoading(true);
+
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (!user) return;
+
+      await supabase
+        .from("profiles")
         .update({
-          theme_color: formData.theme_color,
-          background_color: formData.background_color,
-          button_style: formData.button_style,
-          updated_at: new Date().toISOString()
+          [field]: value,
         })
-        .eq('id', user.id)
+        .eq("id", user.id);
 
-      if (error) throw error
-      
-      alert('Theme updated successfully!')
-      onSuccess()
-    } catch (error: any) {
-      alert('Error: ' + error.message)
+      reloadProfile();
+
+    } catch (error) {
+
+      console.log(error);
+
     } finally {
-      setLoading(false)
+
+      setLoading(false);
+
     }
+
   }
 
-  const buttonStyles = [
-    { value: 'rounded', label: 'Rounded' },
-    { value: 'square', label: 'Square' },
-    { value: 'pill', label: 'Pill' }
-  ]
-
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div>
-        <label className="block text-sm font-medium text-gray-700">Theme Color</label>
-        <div className="flex items-center space-x-2">
-          <input
-            type="color"
-            value={formData.theme_color}
-            onChange={(e) => setFormData({ ...formData, theme_color: e.target.value })}
-            className="w-12 h-12 rounded"
-          />
-          <input
-            type="text"
-            value={formData.theme_color}
-            onChange={(e) => setFormData({ ...formData, theme_color: e.target.value })}
-            className="mt-1 block w-32 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-          />
-        </div>
-      </div>
+
+    <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 space-y-6">
 
       <div>
-        <label className="block text-sm font-medium text-gray-700">Background Color</label>
-        <div className="flex items-center space-x-2">
-          <input
-            type="color"
-            value={formData.background_color}
-            onChange={(e) => setFormData({ ...formData, background_color: e.target.value })}
-            className="w-12 h-12 rounded"
-          />
-          <input
-            type="text"
-            value={formData.background_color}
-            onChange={(e) => setFormData({ ...formData, background_color: e.target.value })}
-            className="mt-1 block w-32 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-          />
-        </div>
+
+        <h2 className="text-2xl font-bold text-white">
+          Theme Customizer
+        </h2>
+
+        <p className="text-zinc-400 text-sm mt-1">
+          Personalize sua página premium.
+        </p>
+
       </div>
 
-      <div>
-        <label className="block text-sm font-medium text-gray-700">Button Style</label>
-        <select
-          value={formData.button_style}
-          onChange={(e) => setFormData({ ...formData, button_style: e.target.value })}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-        >
-          {buttonStyles.map((style) => (
-            <option key={style.value} value={style.value}>
-              {style.label}
-            </option>
-          ))}
-        </select>
-      </div>
+      {/* BACKGROUND */}
+      <div className="space-y-2">
 
-      <div className="p-4 border rounded-md">
-        <h4 className="text-sm font-medium mb-2">Preview:</h4>
-        <div 
-          className="p-4 rounded-md"
-          style={{ backgroundColor: formData.background_color }}
-        >
+        <label className="text-sm text-zinc-400">
+          Background
+        </label>
+
+        <div className="grid grid-cols-3 gap-3">
+
           <button
-            className={`px-4 py-2 font-semibold text-white`}
-            style={{ 
-              backgroundColor: formData.theme_color,
-              borderRadius: 
-                formData.button_style === 'rounded' ? '0.375rem' :
-                formData.button_style === 'square' ? '0' : '9999px'
-            }}
-          >
-            Example Button
-          </button>
+            onClick={() =>
+              updateTheme(
+                "background_style",
+                "gradient"
+              )
+            }
+            className="
+              h-20
+              rounded-2xl
+              bg-gradient-to-br
+              from-purple-500
+              to-blue-500
+            "
+          />
+
+          <button
+            onClick={() =>
+              updateTheme(
+                "background_style",
+                "dark"
+              )
+            }
+            className="
+              h-20
+              rounded-2xl
+              bg-black
+              border
+              border-white/10
+            "
+          />
+
+          <button
+            onClick={() =>
+              updateTheme(
+                "background_style",
+                "neon"
+              )
+            }
+            className="
+              h-20
+              rounded-2xl
+              bg-gradient-to-br
+              from-green-400
+              to-cyan-500
+            "
+          />
+
         </div>
+
       </div>
 
-      <button
-        type="submit"
-        disabled={loading}
-        className="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:opacity-50"
-      >
-        {loading ? 'Updating...' : 'Save Theme'}
-      </button>
-    </form>
-  )
+      {/* CARD STYLE */}
+      <div className="space-y-2">
+
+        <label className="text-sm text-zinc-400">
+          Cards
+        </label>
+
+        <div className="grid grid-cols-2 gap-3">
+
+          <button
+            onClick={() =>
+              updateTheme(
+                "card_style",
+                "glass"
+              )
+            }
+            className="
+              h-16
+              rounded-2xl
+              bg-white/10
+              backdrop-blur-xl
+              border
+              border-white/20
+              text-white
+            "
+          >
+            Glass
+          </button>
+
+          <button
+            onClick={() =>
+              updateTheme(
+                "card_style",
+                "solid"
+              )
+            }
+            className="
+              h-16
+              rounded-2xl
+              bg-zinc-900
+              border
+              border-zinc-700
+              text-white
+            "
+          >
+            Solid
+          </button>
+
+        </div>
+
+      </div>
+
+      {/* BUTTON STYLE */}
+      <div className="space-y-2">
+
+        <label className="text-sm text-zinc-400">
+          Botões
+        </label>
+
+        <div className="grid grid-cols-2 gap-3">
+
+          <button
+            onClick={() =>
+              updateTheme(
+                "button_style",
+                "rounded"
+              )
+            }
+            className="
+              h-14
+              rounded-2xl
+              bg-green-500
+              text-black
+              font-bold
+            "
+          >
+            Rounded
+          </button>
+
+          <button
+            onClick={() =>
+              updateTheme(
+                "button_style",
+                "square"
+              )
+            }
+            className="
+              h-14
+              rounded-md
+              bg-blue-500
+              text-white
+              font-bold
+            "
+          >
+            Square
+          </button>
+
+        </div>
+
+      </div>
+
+      {loading && (
+
+        <div className="text-sm text-zinc-500">
+          Salvando tema...
+        </div>
+
+      )}
+
+    </div>
+
+  );
+
 }

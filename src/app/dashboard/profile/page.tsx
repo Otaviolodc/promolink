@@ -3,10 +3,41 @@
 import ProfilePreview from "@/components/dashboard/ProfilePreview";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
+import ThemeCustomizer from "@/components/ThemeCustomizer";
 
 export default function ProfilePage() {
   const [loading, setLoading] =
     useState(false);
+
+  const [profile, setProfile] =
+    useState<any>(null);
+
+  // USE EFFECT
+    useEffect(() => {
+
+  loadProfile();
+
+}, []);
+
+  // FUNÇÃO LOAD PROFILE
+async function loadProfile() {
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) return;
+
+  const { data } =
+    await supabase
+      .from("profiles")
+      .select("*")
+      .eq("id", user.id)
+      .single();
+
+  setProfile(data);
+
+}
 
   // PERFIL
   const [username, setUsername] =
@@ -478,6 +509,10 @@ setAvatarUrl(data.publicUrl);
         }
       />
 
+      <ThemeCustomizer
+  profile={profile}
+  reloadProfile={loadProfile}
+/>
     </div>
 
   </div>
