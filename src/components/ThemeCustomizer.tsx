@@ -27,14 +27,23 @@ export default function ThemeCustomizer({
 
       if (!user) return;
 
-      await supabase
-        .from("profiles")
-        .update({
-          [field]: value,
-        })
-        .eq("id", user.id);
+      const { error } =
+        await supabase
+          .from("profiles")
+          .update({
+            [field]: value,
+          })
+          .eq("id", user.id);
 
-      reloadProfile();
+      if (error) {
+
+        console.log(error);
+
+        return;
+
+      }
+
+      await reloadProfile();
 
     } catch (error) {
 
@@ -52,6 +61,7 @@ export default function ThemeCustomizer({
 
     <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 space-y-6">
 
+      {/* HEADER */}
       <div>
 
         <h2 className="text-2xl font-bold text-white">
@@ -65,7 +75,7 @@ export default function ThemeCustomizer({
       </div>
 
       {/* BACKGROUND */}
-      <div className="space-y-2">
+      <div className="space-y-3">
 
         <label className="text-sm text-zinc-400">
           Background
@@ -80,13 +90,21 @@ export default function ThemeCustomizer({
                 "gradient"
               )
             }
-            className="
+            className={`
               h-20
               rounded-2xl
               bg-gradient-to-br
               from-purple-500
               to-blue-500
-            "
+              transition
+              hover:scale-105
+              ${
+                profile?.background_style ===
+                "gradient"
+                  ? "ring-4 ring-white"
+                  : ""
+              }
+            `}
           />
 
           <button
@@ -96,13 +114,21 @@ export default function ThemeCustomizer({
                 "dark"
               )
             }
-            className="
+            className={`
               h-20
               rounded-2xl
               bg-black
               border
               border-white/10
-            "
+              transition
+              hover:scale-105
+              ${
+                profile?.background_style ===
+                "dark"
+                  ? "ring-4 ring-white"
+                  : ""
+              }
+            `}
           />
 
           <button
@@ -112,13 +138,21 @@ export default function ThemeCustomizer({
                 "neon"
               )
             }
-            className="
+            className={`
               h-20
               rounded-2xl
               bg-gradient-to-br
               from-green-400
               to-cyan-500
-            "
+              transition
+              hover:scale-105
+              ${
+                profile?.background_style ===
+                "neon"
+                  ? "ring-4 ring-white"
+                  : ""
+              }
+            `}
           />
 
         </div>
@@ -126,7 +160,7 @@ export default function ThemeCustomizer({
       </div>
 
       {/* CARD STYLE */}
-      <div className="space-y-2">
+      <div className="space-y-3">
 
         <label className="text-sm text-zinc-400">
           Cards
@@ -141,15 +175,22 @@ export default function ThemeCustomizer({
                 "glass"
               )
             }
-            className="
+            className={`
               h-16
               rounded-2xl
               bg-white/10
               backdrop-blur-xl
               border
-              border-white/20
               text-white
-            "
+              transition
+              hover:scale-[1.02]
+              ${
+                profile?.card_style ===
+                "glass"
+                  ? "border-white"
+                  : "border-white/20"
+              }
+            `}
           >
             Glass
           </button>
@@ -161,14 +202,21 @@ export default function ThemeCustomizer({
                 "solid"
               )
             }
-            className="
+            className={`
               h-16
               rounded-2xl
               bg-zinc-900
               border
-              border-zinc-700
               text-white
-            "
+              transition
+              hover:scale-[1.02]
+              ${
+                profile?.card_style ===
+                "solid"
+                  ? "border-white"
+                  : "border-zinc-700"
+              }
+            `}
           >
             Solid
           </button>
@@ -178,7 +226,7 @@ export default function ThemeCustomizer({
       </div>
 
       {/* BUTTON STYLE */}
-      <div className="space-y-2">
+      <div className="space-y-3">
 
         <label className="text-sm text-zinc-400">
           Botões
@@ -193,13 +241,19 @@ export default function ThemeCustomizer({
                 "rounded"
               )
             }
-            className="
+            className={`
               h-14
-              rounded-2xl
-              bg-green-500
               text-black
               font-bold
-            "
+              transition
+              hover:scale-[1.02]
+              ${
+                profile?.button_style ===
+                "rounded"
+                  ? "rounded-2xl bg-green-500"
+                  : "rounded-2xl bg-zinc-700 text-white"
+              }
+            `}
           >
             Rounded
           </button>
@@ -211,13 +265,18 @@ export default function ThemeCustomizer({
                 "square"
               )
             }
-            className="
+            className={`
               h-14
-              rounded-md
-              bg-blue-500
-              text-white
               font-bold
-            "
+              transition
+              hover:scale-[1.02]
+              ${
+                profile?.button_style ===
+                "square"
+                  ? "rounded-md bg-blue-500 text-white"
+                  : "rounded-md bg-zinc-700 text-white"
+              }
+            `}
           >
             Square
           </button>
@@ -226,6 +285,7 @@ export default function ThemeCustomizer({
 
       </div>
 
+      {/* LOADING */}
       {loading && (
 
         <div className="text-sm text-zinc-500">
