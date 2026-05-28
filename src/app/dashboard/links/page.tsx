@@ -848,15 +848,20 @@ const totalClicks =
     </button>
 
     {/* CARROSSEL */}
-    <div
-      id="products-carousel"
-      className="
-        flex
-        gap-5
-        overflow-x-hidden
-        scroll-smooth
-      "
-    >
+    <div className="overflow-hidden max-w-[1040px]">
+
+  <div
+    id="products-carousel"
+    className="
+      flex
+      gap-5
+      overflow-x-auto
+      scroll-smooth
+      snap-x
+      snap-mandatory
+      scrollbar-hide
+    "
+  >
 
       {products.map((item, index) => (
 
@@ -1020,6 +1025,7 @@ const totalClicks =
 
       ))}
 
+    </div>
     </div>
 
   </div>
