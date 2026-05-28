@@ -9,6 +9,9 @@ export default function ProfilePage() {
   const [loading, setLoading] =
     useState(false);
 
+  const [template, setTemplate] =
+  useState("default");
+
   const [profile, setProfile] =
     useState<any>(null);
 
@@ -36,6 +39,10 @@ async function loadProfile() {
       .single();
 
   setProfile(data);
+
+  setTemplate(
+  data?.template || "default"
+);
 
 }
 
@@ -66,9 +73,6 @@ async function loadProfile() {
   // 🎨 CORES
   const [themeColor, setThemeColor] =
     useState("#00ff88");
-
-    const [template, setTemplate] =
-  useState("dark");
 
   const [
     productTextColor,
@@ -194,6 +198,7 @@ setAvatarUrl(data.publicUrl);
       .update({
         username,
         bio,
+        template,
         avatar_url: avatarUrl,
         instagram,
         telegram,
@@ -203,7 +208,6 @@ setAvatarUrl(data.publicUrl);
         theme_color: themeColor,
         product_text_color:
           productTextColor,
-        template,
       })
       .eq("id", user.id);
 
@@ -453,6 +457,51 @@ setAvatarUrl(data.publicUrl);
     }
     className="
       w-full
+      bg-zinc-900
+      border
+      border-zinc-800
+      rounded-2xl
+      px-4
+      py-4
+      text-white
+    "
+  >
+
+    <option value="default">
+      Default
+    </option>
+
+    <option value="glass">
+      Glass Premium
+    </option>
+
+    <option value="cyberpunk">
+      Cyberpunk
+    </option>
+
+    <option value="minimal">
+      Minimal
+    </option>
+
+    <option value="dark">
+      Dark Luxury
+    </option>
+
+    <option value="mercadolivre">
+      Mercado Livre Style
+    </option>
+
+  </select>
+
+</div>
+
+  <select
+    value={template}
+    onChange={(e) =>
+      setTemplate(e.target.value)
+    }
+    className="
+      w-full
       bg-zinc-800
       border
       border-zinc-700
@@ -482,8 +531,6 @@ setAvatarUrl(data.publicUrl);
     </option>
 
   </select>
-
-</div>
 
         {/* BOTÃO */}
         <button
