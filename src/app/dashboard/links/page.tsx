@@ -848,7 +848,7 @@ const totalClicks =
     </button>
 
     {/* CARROSSEL */}
-    <div className="overflow-hidden max-w-[1040px]">
+    <div className="overflow-hidden w-full max-w-[1040px]">
 
   <div
     id="products-carousel"
@@ -860,6 +860,8 @@ const totalClicks =
       snap-x
       snap-mandatory
       scrollbar-hide
+      w-full
+      max-w-[1040px]
     "
   >
 
@@ -869,7 +871,7 @@ const totalClicks =
           key={index}
           className="
             min-w-[320px]
-            max-w-[320px]
+            flex-shrink-0
             bg-zinc-900
             border
             border-zinc-800
