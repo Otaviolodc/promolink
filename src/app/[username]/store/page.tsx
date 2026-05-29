@@ -14,8 +14,12 @@ export default function StorePage({
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+
+  if (params?.username) {
     loadStore();
-  }, []);
+  }
+
+}, [params]);
 
   async function loadStore() {
 
@@ -24,9 +28,13 @@ export default function StorePage({
       .from("profiles")
       .select("*")
       .eq("username", params.username)
-      .single();
+      .maybeSingle();
 
     setProfile(profileData);
+    if (!profileData) {
+      setLoading(false);
+      return;
+    }
 
     // PRODUCTS
     const { data: productsData } = await supabase
