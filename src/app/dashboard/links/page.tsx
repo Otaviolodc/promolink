@@ -17,37 +17,13 @@ export default function LinksPage() {
   const [profile, setProfile] = useState<any>(null);
 
 // 🚀 produtos do banco
-  const [products, setProducts] =
-  useState<any[]>([]);
-
   const [clicks, setClicks] =
   useState<any[]>([]);
 
   const [showModal, setShowModal] =
     useState(false);
 
-  const [showProductModal, setShowProductModal] =
-    useState(false);
-
-  const [productTitle, setProductTitle] =
-    useState("");
-
-  const [productPrice, setProductPrice] =
-    useState("");
-
-  const [productImage, setProductImage] =
-    useState("");
-
-  const [productAffiliateUrl, setProductAffiliateUrl] =
-    useState("");
-
-  const [productMarketplace, setProductMarketplace] =
-    useState("");
-
   const [editingLink, setEditingLink] =
-    useState<any>(null);
-
-  const [editingProduct, setEditingProduct] =
     useState<any>(null);
 
   // FORM
@@ -84,31 +60,7 @@ export default function LinksPage() {
 
     setLinks(linksData || []);
 
-    // 🚀 produtos do banco
-   try {
-     const response = await fetch(
-       "/api/products"
-   );
-
-      const result = await response.json();
-
-      setProducts(result.data || []);
-
-      // 📊 analytics
-const { data: clicksData } =
-  await supabase
-    .from("clicks")
-    .select("*");
-
-      setClicks(clicksData || []);
-
-    } catch (err) {
-      console.log(
-        "Erro produtos:",
-        err
-  );
-}
-  };
+    };
 
   useEffect(() => {
     fetchData();
@@ -153,101 +105,6 @@ const handleImageUpload = async (
     .getPublicUrl(fileName);
 
   setImageUrl(data.publicUrl);
-};
-
-// 🚀 upload imagem produto destaque
-const handleProductImageUpload = async (
-  e: any
-) => {
-  const file = e.target.files?.[0];
-
-  if (!file) return;
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) return;
-
-  const fileExt =
-    file.name.split(".").pop();
-
-  const fileName = `product-${user.id}-${Date.now()}.${fileExt}`;
-
-  const { error } =
-    await supabase.storage
-      .from("products")
-      .upload(fileName, file, {
-        upsert: true,
-      });
-
-  if (error) {
-    alert(error.message);
-    return;
-  }
-
-  const { data } = supabase.storage
-    .from("products")
-    .getPublicUrl(fileName);
-
-  setProductImage(data.publicUrl);
-};
-
-// 🚀 criar produto destaque
-const handleCreateProduct = async () => {
-  
-  if (!profile?.is_pro) {
-
-  alert(
-    "Produtos destaque são exclusivos PRO 🚀"
-  );
-
-  return;
-}
-
-  const response = await fetch(
-    "/api/products",
-    {
-      method: "POST",
-
-      headers: {
-        "Content-Type":
-          "application/json",
-      },
-
-      body: JSON.stringify({
-        title: productTitle,
-        price: productPrice,
-        image_url: productImage,
-        affiliate_url:
-          productAffiliateUrl,
-        marketplace:
-          productMarketplace,
-      }),
-    }
-  );
-
-  const result = await response.json();
-
-  if (result.error) {
-    console.log(result.error);
-
-    alert("Erro ao criar produto");
-
-    return;
-  }
-
-  alert("Produto criado 🚀");
-
-  setShowProductModal(false);
-
-  setProductTitle("");
-  setProductPrice("");
-  setProductImage("");
-  setProductAffiliateUrl("");
-  setProductMarketplace("");
-
-  fetchData();
 };
 
   // 🚀 criar link
@@ -371,122 +228,6 @@ const handleCreateProduct = async () => {
     fetchData();
   };
 
-  // ✏️ editar produto
-const handleEditProduct = (
-  item: any
-) => {
-
-  setProductTitle(item.title || "");
-
-  setProductPrice(item.price || "");
-
-  setProductImage(
-    item.image_url || ""
-  );
-
-  setProductAffiliateUrl(
-    item.affiliate_url || ""
-  );
-
-  setProductMarketplace(
-    item.marketplace || ""
-  );
-
-  setEditingProduct(item);
-
-  setShowProductModal(true); 
-};
-
-// 💾 salvar produto
-const handleSaveProduct = async (
-  id: string
-) => {
-
-  const { error } = await supabase
-    .from("products")
-    .update({
-      title: productTitle,
-      price: productPrice,
-      image_url: productImage,
-      affiliate_url:
-        productAffiliateUrl,
-      marketplace:
-        productMarketplace,
-    })
-    .eq("id", id);
-
-  if (error) {
-    console.log(error);
-
-    alert("Erro ao salvar");
-
-    return;
-  }
-
-  alert("Produto atualizado 🚀");
-
-  setShowProductModal(false);
-
-  fetchData();
-};
-
-  // 🗑️ remover produto
-const handleDeleteProduct = async (
-  id: string
-) => {
-
-  const confirmDelete = confirm(
-    "Deseja remover esse produto?"
-  );
-
-  if (!confirmDelete) return;
-
-  await supabase
-    .from("products")
-    .delete()
-    .eq("id", id);
-
-  fetchData();
-};
-
-  // 🔥 importar tendência
-const handleImportTrend = async (
-  item: any
-) => {
-
-  const { error } = await supabase
-    .from("products")
-    .insert([
-      {
-        title: item.title,
-
-        affiliate_url:
-          item.affiliate_url,
-
-        image_url:
-          item.image_url || "",
-
-        marketplace:
-          item.marketplace || "PromoLink",
-
-        price:
-          item.price || "0",
-      },
-    ]);
-
-  if (error) {
-    console.log(error);
-
-    alert("Erro ao importar");
-
-    return;
-  }
-
-  alert("Produto importado 🚀");
-
-  fetchData();
-};
-
   // 📊 métricas
 const totalClicks =
   clicks.length;
@@ -560,39 +301,6 @@ const totalClicks =
 
           </div>
 
-          {/* BOTÕES */}
-          <div className="flex gap-3">
-
-            {/* NOVO LINK */}
-            <button
-              onClick={() => {
-
-                setEditingLink(null);
-
-                setTitle("");
-                setUrl("");
-                setImageUrl("");
-
-                setShowModal(true);
-
-              }}
-              className="
-                bg-green-500
-                hover:bg-green-400
-                transition
-                text-black
-                px-6
-                py-3
-                rounded-xl
-                font-semibold
-              "
-            >
-
-              + Novo Link
-
-            </button>
-
-  </div>
 
 </div>
 
@@ -982,13 +690,38 @@ const totalClicks =
 
         </div>
 
-        {/* PREVIEW MOBILE */}
-        <div className="hidden xl:block">
-          <MobilePreview
-            profile={profile}
-            links={links}
-          />
-        </div>
+       {/* PREVIEW MOBILE */}
+<div className="hidden xl:flex flex-col items-center">
+
+  <MobilePreview
+    profile={profile}
+    links={links}
+  />
+
+  <button
+    onClick={() => {
+      setEditingLink(null);
+      setTitle("");
+      setUrl("");
+      setImageUrl("");
+      setShowModal(true);
+    }}
+    className="
+      mt-5
+      w-full
+      bg-green-500
+      hover:bg-green-400
+      transition
+      text-black
+      py-3
+      rounded-2xl
+      font-bold
+    "
+  >
+    + Novo Link
+  </button>
+
+</div>
 
         {/* MODAL */}
         {showModal && (
@@ -997,9 +730,9 @@ const totalClicks =
             <div className="bg-zinc-900 border border-zinc-800 w-full max-w-lg rounded-3xl p-8">
 
               <h2 className="text-2xl font-bold mb-6">
-                {editingProduct
-                  ? "Editar Produto"
-                  : "Novo Produto"}
+                {editingLink
+                  ? "Editar Link"
+                  : "Novo Link"}
               </h2>
 
               {/* TÍTULO */}
@@ -1084,123 +817,6 @@ const totalClicks =
 
           </div>
        )}
-
-{/* MODAL PRODUTO */}
-{showProductModal && (
-  <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50">
-
-    <div className="bg-zinc-900 border border-zinc-800 w-full max-w-lg rounded-3xl p-8">
-
-      <h2 className="text-2xl font-bold mb-6">
-        Novo Produto
-      </h2>
-
-      {/* TÍTULO */}
-      <input
-        placeholder="Título"
-        value={productTitle}
-        onChange={(e) =>
-          setProductTitle(
-            e.target.value
-          )
-        }
-        className="w-full bg-zinc-800 p-4 rounded-2xl mb-4"
-      />
-
-      {/* PREÇO */}
-      <input
-        placeholder="Preço"
-        value={productPrice}
-        onChange={(e) =>
-          setProductPrice(
-            e.target.value
-          )
-        }
-        className="w-full bg-zinc-800 p-4 rounded-2xl mb-4"
-      />
-
-      {/* MARKETPLACE */}
-      <input
-        placeholder="Marketplace"
-        value={productMarketplace}
-        onChange={(e) =>
-          setProductMarketplace(
-            e.target.value
-          )
-        }
-        className="w-full bg-zinc-800 p-4 rounded-2xl mb-4"
-      />
-
-      {/* LINK */}
-      <input
-        placeholder="Link afiliado"
-        value={productAffiliateUrl}
-        onChange={(e) =>
-          setProductAffiliateUrl(
-            e.target.value
-          )
-        }
-        className="w-full bg-zinc-800 p-4 rounded-2xl mb-4"
-      />
-
-      {/* UPLOAD */}
-      <input
-        type="file"
-        accept="image/*"
-        onChange={
-          handleProductImageUpload
-        }
-        className="w-full bg-zinc-800 p-4 rounded-2xl mb-4"
-      />
-
-      {/* PREVIEW */}
-      {productImage && (
-        <img
-          src={productImage}
-          className="w-full h-52 object-cover rounded-2xl mb-4"
-        />
-      )}
-
-      {/* BOTÕES */}
-      <div className="flex gap-3">
-
-        <button
-          onClick={() => {
-
-            if (editingProduct) {
-              handleSaveProduct(
-                editingProduct.id
-              );
-            } else {
-              handleCreateProduct();
-            }
-
-          }}
-          className="flex-1 bg-green-500 hover:bg-green-400 transition text-black py-3 rounded-2xl font-semibold"
-        >
-          {editingProduct
-            ? "Salvar Produto"
-            : "Criar Produto"}
-        </button>
-
-        <button
-          onClick={() =>
-            setShowProductModal(
-              false
-            )
-          }
-          className="flex-1 bg-zinc-800 py-3 rounded-2xl"
-        >
-          Cancelar
-        </button>
-
-      </div>
-
-    </div>
-
-  </div>
-
-        )}
 
       </div>
 
