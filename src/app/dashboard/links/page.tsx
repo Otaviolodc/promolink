@@ -762,272 +762,85 @@ const totalClicks =
 
           </div>
 
-          {/* 🔥 PRODUTOS EM DESTAQUE */}
-<div className="mb-10">
+          {/* IA DE CONVERSÃO */}
+<div className="mt-12">
 
-  <div className="flex items-center justify-between mb-5">
+  <h2 className="text-3xl font-bold">
+    ⚡ IA de Conversão
+  </h2>
 
-    <div>
+  <p className="text-gray-400 mt-2">
+    Seu assistente de vendas com IA
+  </p>
 
-      <h2 className="text-2xl font-bold">
-        🚀 Produtos em Destaque
-      </h2>
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-6">
 
-      <p className="text-sm text-gray-400 mt-1">
-        Produtos em destaque da plataforma
+    {/* CARD 1 */}
+    <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6">
+
+      <p className="text-gray-400 text-sm">
+        📈 Melhor Produto Hoje
+      </p>
+
+      <h3 className="text-2xl font-bold mt-3">
+        Curso Dropshipping Brasil
+      </h3>
+
+      <p className="text-green-400 mt-2">
+        +32% de cliques hoje
       </p>
 
     </div>
 
-  </div>
+    {/* CARD 2 */}
+    <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6">
 
-  <div className="relative">
+      <p className="text-gray-400 text-sm">
+        🤖 Sugestão da IA
+      </p>
 
-    {/* SETA ESQUERDA */}
-    <button
-      onClick={() => {
-        const container =
-          document.getElementById(
-            "products-carousel"
-          );
+      <h3 className="text-xl font-bold mt-3">
+        Use títulos menores
+      </h3>
 
-        container?.scrollBy({
-          left: -1000,
-          behavior: "smooth",
-        });
-      }}
-      className="
-        absolute
-        left-2
-        top-1/2
-        -translate-y-1/2
-        z-20
-        bg-black/80
-        hover:bg-black
-        w-12
-        h-12
-        rounded-full
-        text-white
-        text-2xl
-        backdrop-blur-xl
-      "
-    >
-      ←
-    </button>
-
-    {/* SETA DIREITA */}
-    <button
-      onClick={() => {
-        const container =
-          document.getElementById(
-            "products-carousel"
-          );
-
-        container?.scrollBy({
-          left: 1000,
-          behavior: "smooth",
-        });
-      }}
-      className="
-        absolute
-        right-2
-        top-1/2
-        -translate-y-1/2
-        z-20
-        bg-black/80
-        hover:bg-black
-        w-12
-        h-12
-        rounded-full
-        text-white
-        text-2xl
-        backdrop-blur-xl
-      "
-    >
-      →
-    </button>
-
-    {/* CARROSSEL */}
-    <div className="overflow-hidden w-full max-w-[1040px]">
-
-  <div
-    id="products-carousel"
-    className="
-      flex
-      gap-5
-      overflow-x-auto
-      scroll-smooth
-      snap-x
-      snap-mandatory
-      scrollbar-hide
-      w-full
-      max-w-[1040px]
-    "
-  >
-
-      {products.map((item, index) => (
-
-        <div
-          key={index}
-          className="
-            min-w-[320px]
-            flex-shrink-0
-            bg-zinc-900
-            border
-            border-zinc-800
-            rounded-3xl
-            overflow-hidden
-            hover:border-green-500
-            hover:scale-[1.02]
-            transition-all
-            duration-300
-          "
-        >
-
-          {/* IMAGEM */}
-          <div className="relative">
-
-            <img
-              src={
-                item.image_url ||
-                "/placeholder.png"
-              }
-              alt={item.title}
-              className="
-                w-full
-                h-52
-                object-cover
-              "
-            />
-
-            {/* MARKETPLACE */}
-            <div className="absolute top-3 right-3 bg-black/80 backdrop-blur-sm text-white text-xs px-3 py-1 rounded-full">
-              {item.marketplace || "PromoLink"}
-            </div>
-
-          </div>
-
-          {/* CONTEÚDO */}
-          <div className="p-5">
-
-            <h3 className="font-semibold text-lg line-clamp-2 min-h-[56px]">
-              {item.title}
-            </h3>
-
-            <p className="text-sm text-gray-400 mt-2">
-
-              {
-                clicks.filter(
-                  (click) =>
-                    click.product_id === item.id
-                ).length
-              }
-
-              {" "}cliques
-
-            </p>
-
-            {/* PREÇO */}
-            <div className="mt-4">
-
-              <span className="text-3xl font-bold text-green-400">
-                R$ {item.price}
-              </span>
-
-            </div>
-
-            {/* BOTÕES */}
-            <div className="flex gap-2 mt-5">
-
-              <a
-                href={item.affiliate_url}
-                target="_blank"
-                className="
-                  flex-1
-                  bg-zinc-800
-                  hover:bg-zinc-700
-                  transition
-                  text-center
-                  py-3
-                  rounded-2xl
-                  text-sm
-                  font-semibold
-                "
-              >
-                Ver Produto
-              </a>
-
-              <button
-                onClick={() =>
-                  handleImportTrend(item)
-                }
-                className="
-                  flex-1
-                  bg-green-500
-                  hover:bg-green-400
-                  transition
-                  text-black
-                  py-3
-                  rounded-2xl
-                  text-sm
-                  font-bold
-                "
-              >
-                + PromoLink
-              </button>
-
-            </div>
-
-            {/* AÇÕES */}
-            <div className="flex gap-2 mt-3">
-
-              <button
-                onClick={() =>
-                  handleEditProduct(item)
-                }
-                className="
-                  flex-1
-                  bg-blue-500
-                  hover:bg-blue-400
-                  transition
-                  text-black
-                  py-2
-                  rounded-2xl
-                  text-sm
-                  font-bold
-                "
-              >
-                Editar
-              </button>
-
-              <button
-                onClick={() =>
-                  handleDeleteProduct(item.id)
-                }
-                className="
-                  flex-1
-                  bg-red-500
-                  hover:bg-red-400
-                  transition
-                  text-black
-                  py-2
-                  rounded-2xl
-                  text-sm
-                  font-bold
-                "
-              >
-                Remover
-              </button>
-
-            </div>
-
-          </div>
-
-        </div>
-
-      ))}
+      <p className="text-gray-400 mt-2">
+        Produtos com até 45 caracteres convertem mais.
+      </p>
 
     </div>
+
+    {/* CARD 3 */}
+    <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6">
+
+      <p className="text-gray-400 text-sm">
+        🔥 Melhor Horário
+      </p>
+
+      <h3 className="text-2xl font-bold mt-3">
+        19h às 22h
+      </h3>
+
+      <p className="text-gray-400 mt-2">
+        Maior pico de conversão hoje
+      </p>
+
+    </div>
+
+    {/* CARD 4 */}
+    <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6">
+
+      <p className="text-gray-400 text-sm">
+        🎯 Missão do Dia
+      </p>
+
+      <div className="mt-3 space-y-2">
+
+        <p>✔ Criar 1 produto</p>
+        <p>✔ Compartilhar 2 links</p>
+        <p>✔ Fazer 20 cliques</p>
+
+      </div>
+
     </div>
 
   </div>
