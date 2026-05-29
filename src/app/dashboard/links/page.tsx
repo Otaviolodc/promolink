@@ -592,38 +592,6 @@ const totalClicks =
 
             </button>
 
-    {/* NOVO PRODUTO */}
-    <button
-      onClick={() => {
-
-        if (!profile?.is_pro) {
-
-          alert(
-            "Recurso exclusivo PRO 🚀"
-          );
-
-          return;
-        }
-
-        setShowProductModal(true);
-
-      }}
-      className="
-        bg-white
-        hover:bg-zinc-200
-        transition
-        text-black
-        px-6
-        py-3
-        rounded-xl
-        font-semibold
-      "
-    >
-
-      + Novo Produto
-
-    </button>
-
   </div>
 
 </div>
