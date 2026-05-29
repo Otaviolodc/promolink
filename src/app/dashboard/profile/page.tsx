@@ -1,5 +1,6 @@
 "use client";
 
+import Sidebar from "@/components/Sidebar";
 import ProfilePreview from "@/components/dashboard/ProfilePreview";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
@@ -223,7 +224,12 @@ setAvatarUrl(data.publicUrl);
   };
 
   return (
-  <div className="min-h-screen bg-black text-white p-8">
+
+  <div className="flex bg-black text-white min-h-screen">
+
+    <Sidebar />
+
+    <div className="flex-1 p-8">
 
     {/* HEADER */}
     <div className="mb-10">
@@ -526,5 +532,7 @@ setAvatarUrl(data.publicUrl);
     </div>
 
   </div>
+
+</div>
 );
 }
