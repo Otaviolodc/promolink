@@ -3,59 +3,74 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 
-export default function StorePage({
+export default async function StorePage({
   params,
 }: {
-  params: { username: string };
+  params: Promise<{ username: string }>;
 }) {
 
+  const resolvedParams = await params;
   const [profile, setProfile] = useState<any>(null);
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
 
-  if (params?.username) {
+  if (resolvedParams?.username) {
     loadStore();
   }
 
-}, [params]);
+}, [resolvedParams?.username]);
 
   async function loadStore() {
 
-    // PROFILE
-    const { data: profileData } = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("username", params.username)
-      .maybeSingle();
+  try {
 
-    setProfile(profileData);
-    if (!profileData) {
+    console.log("USERNAME:", resolvedParams.username);
+
+    // PROFILE
+    const { data: profileData, error: profileError } =
+      await supabase
+        .from("profiles")
+        .select("*")
+        .eq("username", resolvedParams.username)
+        .single();
+
+    console.log(profileData);
+    console.log(profileError);
+
+    if (profileError || !profileData) {
       setLoading(false);
       return;
     }
 
+    setProfile(profileData);
+
     // PRODUCTS
-    const { data: productsData } = await supabase
+    const {
+      data: productsData,
+      error: productsError,
+    } = await supabase
       .from("products")
       .select("*")
-      .eq("user_id", profileData.id)
-      .order("created_at", {
-        ascending: false,
-      });
+      .eq("user_id", profileData.id);
+
+    console.log(productsData);
+    console.log(productsError);
 
     setProducts(productsData || []);
+
+  } catch (err) {
+
+    console.log(err);
+
+  } finally {
+
     setLoading(false);
+
   }
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-black text-white flex items-center justify-center">
-        Carregando loja...
-      </div>
-    );
-  }
+}
 
   return (
     <div className="min-h-screen bg-black text-white">
