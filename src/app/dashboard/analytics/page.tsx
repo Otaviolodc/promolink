@@ -53,6 +53,26 @@ const scoreIA =
     )
   );
 
+  const heatmapData = [
+
+  { hour: "08h", level: 1 },
+
+  { hour: "10h", level: 2 },
+
+  { hour: "12h", level: 3 },
+
+  { hour: "14h", level: 2 },
+
+  { hour: "16h", level: 4 },
+
+  { hour: "18h", level: 5 },
+
+  { hour: "20h", level: 4 },
+
+  { hour: "22h", level: 2 },
+
+];
+
 return (
 
     <div className="flex bg-black text-white min-h-screen">
@@ -202,6 +222,75 @@ return (
 </div>
 
         </div>
+
+        {/* HEATMAP */}
+<div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-8 mb-10">
+
+  <div className="flex items-center justify-between mb-8">
+
+    <div>
+
+      <h2 className="text-2xl font-bold">
+        🔥 Heatmap de Conversão
+      </h2>
+
+      <p className="text-gray-400 mt-1">
+        Horários com maior atividade
+      </p>
+
+    </div>
+
+    <div className="text-green-400 font-bold">
+      IA ANALISANDO
+    </div>
+
+  </div>
+
+  <div className="grid grid-cols-4 md:grid-cols-8 gap-4">
+
+    {heatmapData.map((item) => (
+
+      <div
+        key={item.hour}
+        className={`
+          rounded-2xl
+          p-4
+          text-center
+          border
+          transition-all
+          ${
+            item.level >= 5
+              ? "bg-green-500 text-black border-green-400"
+              : item.level >= 4
+              ? "bg-green-500/30 border-green-500"
+              : item.level >= 3
+              ? "bg-green-500/10 border-green-500/40"
+              : "bg-zinc-800 border-zinc-700"
+          }
+        `}
+      >
+
+        <p className="font-bold">
+          {item.hour}
+        </p>
+
+        <p className="text-sm mt-2">
+          {item.level >= 5
+            ? "PICO"
+            : item.level >= 4
+            ? "ALTO"
+            : item.level >= 3
+            ? "MÉDIO"
+            : "BAIXO"}
+        </p>
+
+      </div>
+
+    ))}
+
+  </div>
+
+</div>
 
         {/* GRID */}
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
