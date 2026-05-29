@@ -84,6 +84,25 @@ export default function Sidebar() {
 
       </nav>
 
+      <Link
+  href="/login"
+  className="
+    mt-10
+    bg-red-500
+    hover:bg-red-400
+    transition
+    text-white
+    py-4
+    rounded-2xl
+    font-bold
+    w-full
+    text-center
+    block
+  "
+>
+  Sair da conta
+</Link>
+
     </aside>
 
   );
