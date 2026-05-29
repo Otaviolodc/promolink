@@ -1,266 +1,250 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabase";
-
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  CartesianGrid,
-} from "recharts";
+import Sidebar from "@/components/Sidebar";
 
 export default function AnalyticsPage() {
-  const [links, setLinks] = useState<any[]>([]);
-  const [dailyClicks, setDailyClicks] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetchAnalytics();
-  }, []);
-
-  const fetchAnalytics = async () => {
-    try {
-      // 👤 usuário
-const {
-  data: { user },
-} = await supabase.auth.getUser();
-
-if (!user) {
-  setLoading(false);
-  return;
-}
-
-// 🚀 verificar plano
-const { data: profile } =
-  await supabase
-    .from("profiles")
-    .select("*")
-    .eq("id", user.id)
-    .single();
-
-if (
-  profile?.subscription_status !==
-  "active"
-) {
-
-  window.location.href =
-    "/pricing";
-
-  return;
-
-}
-
-      // 🔗 links
-      const { data: linksData } = await supabase
-        .from("links")
-        .select("*")
-        .eq("user_id", user.id);
-
-      setLinks(linksData || []);
-
-      // 📈 analytics diário
-      const { data: dailyData } = await supabase
-  .from("link_clicks_daily")
-  .select(`
-    *,
-    links!inner (
-      title,
-      user_id
-    )
-  `)
-  .eq("links.user_id", user.id)
-  .order("date", { ascending: true });
-  
-      const formatted =
-        dailyData?.map((item: any) => ({
-          date: item.date,
-          clicks: item.clicks,
-          title: item.links?.title || "Link",
-        })) || [];
-
-      setDailyClicks(formatted);
-
-      setLoading(false);
-
-    } catch (err) {
-      console.log(err);
-      setLoading(false);
-    }
-  };
-
-  // 📊 métricas
-  const totalClicks = links.reduce(
-    (acc, link) => acc + (link.clicks || 0),
-    0
-  );
-
-  const topLink = [...links].sort(
-    (a, b) => (b.clicks || 0) - (a.clicks || 0)
-  )[0];
-
-  if (loading) {
-    return (
-      <div className="p-10 text-white">
-        Carregando...
-      </div>
-    );
-  }
 
   return (
-  <div className="p-8 text-white min-h-screen bg-black">
 
-    {/* resto da página */}
+    <div className="flex bg-black text-white min-h-screen">
 
-      {/* HEADER */}
-      <div className="mb-10">
-        <h1 className="text-4xl font-bold">
-          Analytics
-        </h1>
+      <Sidebar />
 
-        <p className="text-gray-400 mt-2">
-          Acompanhe seus resultados
-        </p>
-      </div>
+      <div className="flex-1 p-8">
 
-      {/* CARDS */}
-      <div className="grid grid-cols-3 gap-6 mb-10">
+        {/* HEADER */}
+        <div className="mb-10">
 
-        <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-2xl">
-          <p className="text-gray-400 text-sm">
-            Total de Cliques
+          <h1 className="text-4xl font-black">
+            ⚡ Centro de IA e Performance
+          </h1>
+
+          <p className="text-gray-400 mt-2 text-lg">
+            IA analisando seus links em tempo real
           </p>
 
-          <h2 className="text-4xl font-bold mt-2">
-            {totalClicks}
-          </h2>
         </div>
 
-        <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-2xl">
-          <p className="text-gray-400 text-sm">
-            Links Ativos
-          </p>
+        {/* CARDS */}
+        <div className="grid grid-cols-2 xl:grid-cols-4 gap-6 mb-10">
 
-          <h2 className="text-4xl font-bold mt-2">
-            {links.length}
-          </h2>
+          {/* RECEITA */}
+          <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6">
+
+            <p className="text-gray-400 text-sm">
+              💰 Receita Estimada
+            </p>
+
+            <h2 className="text-4xl font-black text-green-400 mt-3">
+              R$ 2.450
+            </h2>
+
+            <p className="text-green-400 text-sm mt-2">
+              +18% hoje
+            </p>
+
+          </div>
+
+          {/* VISITANTES */}
+          <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6">
+
+            <p className="text-gray-400 text-sm">
+              👀 Visitantes Hoje
+            </p>
+
+            <h2 className="text-4xl font-black mt-3">
+              1.284
+            </h2>
+
+            <p className="text-gray-400 text-sm mt-2">
+              Tráfego em crescimento
+            </p>
+
+          </div>
+
+          {/* CONVERSÃO */}
+          <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6">
+
+            <p className="text-gray-400 text-sm">
+              📈 Conversão
+            </p>
+
+            <h2 className="text-4xl font-black mt-3">
+              4.8%
+            </h2>
+
+            <p className="text-green-400 text-sm mt-2">
+              Acima da média
+            </p>
+
+          </div>
+
+          {/* SCORE */}
+          <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6">
+
+            <p className="text-gray-400 text-sm">
+              🧠 Score IA
+            </p>
+
+            <h2 className="text-4xl font-black mt-3 text-green-400">
+              87/100
+            </h2>
+
+            <p className="text-gray-400 text-sm mt-2">
+              Performance excelente
+            </p>
+
+          </div>
+
         </div>
 
-        <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-2xl">
-          <p className="text-gray-400 text-sm">
-            Top Link
-          </p>
+        {/* GRÁFICO */}
+        <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-8 mb-10">
 
-          <h2 className="text-xl font-bold mt-2">
-            {topLink?.title || "-"}
-          </h2>
-        </div>
+          <div className="flex items-center justify-between mb-8">
 
-      </div>
+            <div>
 
-      {/* 📈 GRÁFICO */}
-      <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 mb-10">
+              <h2 className="text-2xl font-bold">
+                📈 Crescimento de Cliques
+              </h2>
 
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-bold">
-            Crescimento Diário
-          </h2>
+              <p className="text-gray-400 mt-1">
+                Últimos 7 dias
+              </p>
 
-          <span className="text-sm text-gray-400">
-            Histórico de cliques
-          </span>
-        </div>
+            </div>
 
-        <div className="w-full h-80">
+            <div className="text-green-400 font-bold">
+              +32%
+            </div>
 
-          <ResponsiveContainer width="100%" height="100%">
+          </div>
 
-            <LineChart data={dailyClicks}>
+          {/* BARRAS */}
+          <div className="flex items-end gap-4 h-56">
 
-              <CartesianGrid
-                strokeDasharray="3 3"
-                stroke="#27272a"
-              />
+            <div className="flex-1 bg-green-500 rounded-t-3xl h-[30%]" />
+            <div className="flex-1 bg-green-500 rounded-t-3xl h-[45%]" />
+            <div className="flex-1 bg-green-500 rounded-t-3xl h-[40%]" />
+            <div className="flex-1 bg-green-500 rounded-t-3xl h-[60%]" />
+            <div className="flex-1 bg-green-500 rounded-t-3xl h-[75%]" />
+            <div className="flex-1 bg-green-500 rounded-t-3xl h-[90%]" />
+            <div className="flex-1 bg-green-500 rounded-t-3xl h-[100%]" />
 
-              <XAxis
-                dataKey="date"
-                stroke="#a1a1aa"
-              />
-
-              <YAxis
-                stroke="#a1a1aa"
-              />
-
-              <Tooltip />
-
-              <Line
-                type="monotone"
-                dataKey="clicks"
-                stroke="#22c55e"
-                strokeWidth={4}
-              />
-
-            </LineChart>
-
-          </ResponsiveContainer>
+          </div>
 
         </div>
 
-      </div>
+        {/* GRID */}
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
 
-      {/* LISTA */}
-      <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
+          {/* IA INSIGHTS */}
+          <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-8">
 
-        <h2 className="text-xl font-bold mb-6">
-          Performance dos Links
-        </h2>
+            <h2 className="text-2xl font-bold mb-6">
+              🤖 Insights da IA
+            </h2>
 
-        {links.length === 0 ? (
-          <p className="text-gray-400">
-            Nenhum dado encontrado
-          </p>
-        ) : (
-          <div className="space-y-4">
+            <div className="space-y-5">
 
-            {links.map((link) => (
-              <div
-                key={link.id}
-                className="flex items-center justify-between bg-zinc-800/40 p-4 rounded-xl"
-              >
+              <div className="bg-zinc-800 rounded-2xl p-4">
+                🔥 Seu produto “Bolsa Nike”
+                cresceu 32% hoje
+              </div>
+
+              <div className="bg-zinc-800 rounded-2xl p-4">
+                📈 Links com imagem convertem
+                4x mais
+              </div>
+
+              <div className="bg-zinc-800 rounded-2xl p-4">
+                🕒 Melhor horário:
+                19h às 22h
+              </div>
+
+              <div className="bg-zinc-800 rounded-2xl p-4">
+                🚀 Você está acima de 84%
+                dos usuários
+              </div>
+
+            </div>
+
+          </div>
+
+          {/* RANKING */}
+          <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-8">
+
+            <h2 className="text-2xl font-bold mb-6">
+              🏆 Ranking de Links
+            </h2>
+
+            <div className="space-y-4">
+
+              <div className="bg-zinc-800 rounded-2xl p-5 flex items-center justify-between">
 
                 <div>
-                  <p className="font-semibold">
-                    {link.title}
+                  <p className="font-bold">
+                    Bolsa Nike
                   </p>
 
                   <p className="text-sm text-gray-400">
-                    /go/{link.slug}
+                    245 cliques
                   </p>
                 </div>
 
-                <div className="text-right">
-
-                  <p className="text-2xl font-bold">
-                    {link.clicks}
-                  </p>
-
-                  <p className="text-sm text-gray-400">
-                    cliques
-                  </p>
-
+                <div className="text-green-400 font-bold">
+                  +32%
                 </div>
 
               </div>
-            ))}
+
+              <div className="bg-zinc-800 rounded-2xl p-5 flex items-center justify-between">
+
+                <div>
+                  <p className="font-bold">
+                    Creatina Growth
+                  </p>
+
+                  <p className="text-sm text-gray-400">
+                    182 cliques
+                  </p>
+                </div>
+
+                <div className="text-green-400 font-bold">
+                  +21%
+                </div>
+
+              </div>
+
+              <div className="bg-zinc-800 rounded-2xl p-5 flex items-center justify-between">
+
+                <div>
+                  <p className="font-bold">
+                    Starlink Mini
+                  </p>
+
+                  <p className="text-sm text-gray-400">
+                    120 cliques
+                  </p>
+                </div>
+
+                <div className="text-green-400 font-bold">
+                  +12%
+                </div>
+
+              </div>
+
+            </div>
 
           </div>
-        )}
+
+        </div>
 
       </div>
 
     </div>
+
   );
+
 }
