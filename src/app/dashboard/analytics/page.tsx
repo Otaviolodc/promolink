@@ -1,8 +1,26 @@
 "use client";
 
 import Sidebar from "@/components/Sidebar";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
 
 export default function AnalyticsPage() {
+
+  const chartData = [
+  { day: "Seg", clicks: 12 },
+  { day: "Ter", clicks: 18 },
+  { day: "Qua", clicks: 22 },
+  { day: "Qui", clicks: 35 },
+  { day: "Sex", clicks: 49 },
+  { day: "Sáb", clicks: 41 },
+  { day: "Dom", clicks: 67 },
+];
 
   return (
 
@@ -122,17 +140,35 @@ export default function AnalyticsPage() {
           </div>
 
           {/* BARRAS */}
-          <div className="flex items-end gap-4 h-56">
+          <div className="h-72">
 
-            <div className="flex-1 bg-green-500 rounded-t-3xl h-[30%]" />
-            <div className="flex-1 bg-green-500 rounded-t-3xl h-[45%]" />
-            <div className="flex-1 bg-green-500 rounded-t-3xl h-[40%]" />
-            <div className="flex-1 bg-green-500 rounded-t-3xl h-[60%]" />
-            <div className="flex-1 bg-green-500 rounded-t-3xl h-[75%]" />
-            <div className="flex-1 bg-green-500 rounded-t-3xl h-[90%]" />
-            <div className="flex-1 bg-green-500 rounded-t-3xl h-[100%]" />
+  <ResponsiveContainer width="100%" height="100%">
 
-          </div>
+    <LineChart data={chartData}>
+
+      <XAxis
+        dataKey="day"
+        stroke="#888"
+      />
+
+      <YAxis
+        stroke="#888"
+      />
+
+      <Tooltip />
+
+      <Line
+        type="monotone"
+        dataKey="clicks"
+        stroke="#00ff66"
+        strokeWidth={4}
+      />
+
+    </LineChart>
+
+  </ResponsiveContainer>
+
+</div>
 
         </div>
 
