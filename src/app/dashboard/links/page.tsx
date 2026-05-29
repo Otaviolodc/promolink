@@ -399,46 +399,79 @@ const totalClicks = links.reduce(
 
           </div>
 
-          {/* MÉTRICAS */}
-          <div className="grid grid-cols-3 gap-6 mb-8">
+          {/* 🚀 CENTRAL DE PERFORMANCE */}
 
-            <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
+<div className="grid grid-cols-2 xl:grid-cols-4 gap-6 mb-10">
 
-              <p className="text-gray-400 text-sm">
-                Total Cliques
-              </p>
+  {/* FATURAMENTO */}
+  <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6">
 
-              <h2 className="text-4xl font-bold mt-3">
-                {totalClicks}
-              </h2>
+    <p className="text-gray-400 text-sm">
+      💰 Faturamento
+    </p>
 
-            </div>
+    <h2 className="text-4xl font-black mt-3 text-green-400">
+      R$ {(totalClicks * 6.9).toFixed(0)}
+    </h2>
 
-            <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
+    <p className="text-green-400 text-sm mt-2">
+      +12% hoje
+    </p>
 
-              <p className="text-gray-400 text-sm">
-                Links Ativos
-              </p>
+  </div>
 
-              <h2 className="text-4xl font-bold mt-3">
-                {links.length}
-              </h2>
+  {/* VENDAS */}
+  <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6">
 
-            </div>
+    <p className="text-gray-400 text-sm">
+      🛒 Vendas Hoje
+    </p>
 
-            <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
+    <h2 className="text-4xl font-black mt-3">
+      {Math.floor(totalClicks * 0.08)}
+    </h2>
 
-              <p className="text-gray-400 text-sm">
-                Melhor Link
-              </p>
+    <p className="text-gray-400 text-sm mt-2">
+      Conversões estimadas
+    </p>
 
-              <h2 className="text-lg font-semibold mt-3">
-                {topLink?.title || "-"}
-              </h2>
+  </div>
 
-            </div>
+  {/* CONVERSÃO */}
+  <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6">
 
-          </div>
+    <p className="text-gray-400 text-sm">
+      📈 Conversão
+    </p>
+
+    <h2 className="text-4xl font-black mt-3">
+      4.8%
+    </h2>
+
+    <p className="text-green-400 text-sm mt-2">
+      Acima da média
+    </p>
+
+  </div>
+
+  {/* TICKET */}
+  <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6">
+
+    <p className="text-gray-400 text-sm">
+      🎯 Ticket Médio
+    </p>
+
+    <h2 className="text-4xl font-black mt-3">
+      R$ 69
+    </h2>
+
+    <p className="text-gray-400 text-sm mt-2">
+      Valor médio por venda
+    </p>
+
+  </div>
+
+</div>
 
           {/* IA DE CONVERSÃO */}
 <div className="mt-12">
