@@ -848,10 +848,11 @@ const totalClicks =
 </div>
 
           {/* LINKS */}
-          <div className="bg-zinc-900 border border-zinc-800 rounded-3xl overflow-hidden">
+
+          <div className="mt-14 bg-zinc-900 border border-zinc-800 rounded-3xl overflow-hidden">
 
             <div className="p-6 border-b border-zinc-800">
-
+         
               <h2 className="text-xl font-bold">
                 Seus Links
               </h2>
