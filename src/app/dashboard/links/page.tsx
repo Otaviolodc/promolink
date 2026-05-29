@@ -8,7 +8,7 @@ import {
 
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
-import Sidebar from "@/components/dashboard/Sidebar";
+import Sidebar from "@/components/Sidebar";
 import MobilePreview from "@/components/dashboard/MobilePreview";
 import { isProUser } from "@/lib/isPro";
 
