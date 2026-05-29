@@ -21,6 +21,22 @@ export default function AnalyticsPage() {
   { day: "Sáb", clicks: 41 },
   { day: "Dom", clicks: 67 },
 ];
+  const aiMessages = [
+
+  "🚀 Seus links cresceram acima da média hoje.",
+
+  "🔥 Produtos com imagem convertem até 4x mais.",
+
+  "📈 Seu horário mais forte é entre 19h e 22h.",
+
+  "🤖 Seu perfil tem potencial viral hoje.",
+
+  "💰 Links com títulos curtos performam melhor.",
+
+];
+
+  const randomMessage =
+  aiMessages[0];
 
   return (
 
@@ -114,7 +130,7 @@ export default function AnalyticsPage() {
 
           </div>
 
-        </div>
+      </div>
 
         {/* GRÁFICO */}
         <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-8 mb-10">
@@ -182,31 +198,41 @@ export default function AnalyticsPage() {
               🤖 Insights da IA
             </h2>
 
-            <div className="space-y-5">
+            <div className="space-y-4">
 
-              <div className="bg-zinc-800 rounded-2xl p-4">
-                🔥 Seu produto “Bolsa Nike”
-                cresceu 32% hoje
-              </div>
+  <div className="bg-zinc-800 rounded-2xl p-5 border border-green-500/20">
 
-              <div className="bg-zinc-800 rounded-2xl p-4">
-                📈 Links com imagem convertem
-                4x mais
-              </div>
+    <p className="text-green-400 font-semibold mb-2">
+      IA ANALISANDO PERFORMANCE
+    </p>
 
-              <div className="bg-zinc-800 rounded-2xl p-4">
-                🕒 Melhor horário:
-                19h às 22h
-              </div>
+    <p className="text-lg">
+      {randomMessage}
+    </p>
 
-              <div className="bg-zinc-800 rounded-2xl p-4">
-                🚀 Você está acima de 84%
-                dos usuários
-              </div>
+  </div>
 
-            </div>
+  <div className="bg-zinc-800 rounded-2xl p-5">
 
-          </div>
+    <p>
+      📊 Seus links tiveram aumento
+      de 32% nas últimas 24h.
+    </p>
+
+  </div>
+
+  <div className="bg-zinc-800 rounded-2xl p-5">
+
+    <p>
+      🎯 Produtos com imagem estão
+      recebendo mais cliques.
+    </p>
+
+  </div>
+
+</div>
+
+</div>
 
           {/* RANKING */}
           <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-8">
