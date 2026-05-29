@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
-import Sidebar from "@/components/dashboard/Sidebar";
+import Sidebar from "@/components/Sidebar";
 
 export default function StorePage() {
 
