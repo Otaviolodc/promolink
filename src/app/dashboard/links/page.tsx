@@ -229,8 +229,10 @@ const handleImageUpload = async (
   };
 
   // 📊 métricas
-const totalClicks =
-  clicks.length;
+const totalClicks = links.reduce(
+  (total, link) => total + (link.clicks || 0),
+  0
+);
 
   const topLink = [...links].sort(
     (a, b) => b.clicks - a.clicks
