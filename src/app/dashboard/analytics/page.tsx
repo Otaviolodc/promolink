@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Sidebar from "@/components/Sidebar";
 import {
   LineChart,
@@ -101,6 +102,70 @@ const radarData = [
   },
 
 ];
+
+const [message, setMessage] =
+  useState("");
+
+const [chatMessages, setChatMessages] =
+  useState([
+    {
+      role: "assistant",
+      text: "🚀 Olá! Sou a IA do PromoLink. Posso ajudar na sua conversão.",
+    },
+  ]);
+
+  const handleSendMessage = () => {
+
+  if (!message) return;
+
+  const userMessage = {
+    role: "user",
+    text: message,
+  };
+
+  let aiResponse =
+    "🚀 Continue postando links diariamente.";
+
+  // IA SIMULADA
+  if (
+    message.toLowerCase().includes("produto")
+  ) {
+
+    aiResponse =
+      "🔥 Produtos fitness e tecnologia estão em alta hoje.";
+
+  }
+
+  if (
+    message.toLowerCase().includes("titulo")
+  ) {
+
+    aiResponse =
+      "📈 Títulos curtos convertem mais. Use até 45 caracteres.";
+
+  }
+
+  if (
+    message.toLowerCase().includes("vender")
+  ) {
+
+    aiResponse =
+      "💰 Poste seus links entre 19h e 22h para maior conversão.";
+
+  }
+
+  setChatMessages((prev) => [
+    ...prev,
+    userMessage,
+    {
+      role: "assistant",
+      text: aiResponse,
+    },
+  ]);
+
+  setMessage("");
+
+};
 
 return (
 
@@ -430,6 +495,96 @@ return (
   </div>
 
 </div>
+
+</div>
+
+{/* CHAT IA */}
+<div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-8 mt-10">
+
+  <div className="flex items-center justify-between mb-6">
+
+    <div>
+
+      <h2 className="text-2xl font-bold">
+        🤖 IA PromoLink
+      </h2>
+
+      <p className="text-gray-400 mt-1">
+        Seu assistente de vendas inteligente
+      </p>
+
+    </div>
+
+    <div className="text-green-400 font-bold">
+      ONLINE
+    </div>
+
+  </div>
+
+  {/* CHAT */}
+  <div className="space-y-4 max-h-[400px] overflow-y-auto mb-6">
+
+    {chatMessages.map((msg, index) => (
+
+      <div
+        key={index}
+        className={`
+          p-4
+          rounded-2xl
+          max-w-[80%]
+          ${
+            msg.role === "assistant"
+              ? "bg-zinc-800"
+              : "bg-green-500 text-black ml-auto"
+          }
+        `}
+      >
+
+        {msg.text}
+
+      </div>
+
+    ))}
+
+  </div>
+
+  {/* INPUT */}
+  <div className="flex gap-3">
+
+    <input
+      value={message}
+      onChange={(e) =>
+        setMessage(e.target.value)
+      }
+      placeholder="Pergunte para IA..."
+      className="
+        flex-1
+        bg-zinc-800
+        border
+        border-zinc-700
+        rounded-2xl
+        px-5
+        py-4
+        outline-none
+      "
+    />
+
+    <button
+      onClick={handleSendMessage}
+      className="
+        bg-green-500
+        hover:bg-green-400
+        transition
+        text-black
+        px-6
+        rounded-2xl
+        font-bold
+      "
+    >
+      Enviar
+    </button>
+
+  </div>
 
 </div>
 
