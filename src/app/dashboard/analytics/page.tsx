@@ -38,7 +38,22 @@ export default function AnalyticsPage() {
   const randomMessage =
   aiMessages[0];
 
-  return (
+const totalClicks = 128;
+
+const links = [
+  1, 2, 3, 4, 5
+];
+
+const scoreIA =
+  Math.min(
+    100,
+    (
+      links.length * 12 +
+      totalClicks * 2
+    )
+  );
+
+return (
 
     <div className="flex bg-black text-white min-h-screen">
 
@@ -121,7 +136,7 @@ export default function AnalyticsPage() {
             </p>
 
             <h2 className="text-4xl font-black mt-3 text-green-400">
-              87/100
+              {scoreIA}/100
             </h2>
 
             <p className="text-gray-400 text-sm mt-2">
