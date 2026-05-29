@@ -73,6 +73,35 @@ const scoreIA =
 
 ];
 
+const radarData = [
+
+  {
+    name: "Conversão",
+    value: 82,
+  },
+
+  {
+    name: "Engajamento",
+    value: 74,
+  },
+
+  {
+    name: "CTR",
+    value: 91,
+  },
+
+  {
+    name: "Potencial Viral",
+    value: 88,
+  },
+
+  {
+    name: "Performance",
+    value: 79,
+  },
+
+];
+
 return (
 
     <div className="flex bg-black text-white min-h-screen">
@@ -283,6 +312,72 @@ return (
             ? "MÉDIO"
             : "BAIXO"}
         </p>
+
+      </div>
+
+    ))}
+
+  </div>
+
+</div>
+
+{/* RADAR IA */}
+<div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-8 mb-10">
+
+  <div className="flex items-center justify-between mb-8">
+
+    <div>
+
+      <h2 className="text-2xl font-bold">
+        🧠 Radar IA
+      </h2>
+
+      <p className="text-gray-400 mt-1">
+        Análise inteligente da performance
+      </p>
+
+    </div>
+
+    <div className="text-green-400 font-bold">
+      IA ATIVA
+    </div>
+
+  </div>
+
+  <div className="space-y-6">
+
+    {radarData.map((item) => (
+
+      <div key={item.name}>
+
+        <div className="flex items-center justify-between mb-2">
+
+          <p className="font-semibold">
+            {item.name}
+          </p>
+
+          <p className="text-green-400 font-bold">
+            {item.value}%
+          </p>
+
+        </div>
+
+        <div className="w-full bg-zinc-800 rounded-full h-4 overflow-hidden">
+
+          <div
+            className="
+              bg-green-500
+              h-full
+              rounded-full
+              transition-all
+              duration-700
+            "
+            style={{
+              width: `${item.value}%`,
+            }}
+          />
+
+        </div>
 
       </div>
 
