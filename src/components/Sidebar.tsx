@@ -24,6 +24,12 @@ export default function Sidebar() {
       name: "Loja",
       href: "/dashboard/store",
     },
+
+    {
+      name: "Marketplace",
+      href: "/marketplace",
+    },
+
     {
       name: "Upgrade PRO",
       href: "/pricing",
