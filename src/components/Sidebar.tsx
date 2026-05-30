@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -47,19 +48,19 @@ export default function Sidebar() {
         p-5
         flex
         flex-col
-        justify-between
+        gap-6
       "
 >
 
       <div className="mb-10">
 
-        <h1 className="
-          text-3xl
-          font-black
-          text-green-400
-        ">
-          PromoLink
-        </h1>
+        <Image
+          src="/logo.png"
+          alt="PromoLink"
+          width={220}
+          height={220}
+          className="object-contain"
+      />
 
         <p className="text-zinc-500 text-sm mt-1">
           IA Marketing Platform
