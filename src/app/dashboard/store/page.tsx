@@ -144,6 +144,31 @@ useEffect(() => {
 
   }
 
+  function editProduct(product: any) {
+
+  setTitle(product.title);
+  setDescription(product.description);
+  setPrice(product.price);
+  setImageUrl(product.image);
+
+}
+
+async function deleteProduct(id: string) {
+
+  const confirmDelete =
+    confirm("Deseja excluir este produto?");
+
+  if (!confirmDelete) return;
+
+  await supabase
+    .from("products_checkout")
+    .delete()
+    .eq("id", id);
+
+  fetchProducts();
+
+}
+
   return (
 
     <div className="flex bg-black text-white min-h-screen">
@@ -275,15 +300,17 @@ useEffect(() => {
           <div className="flex gap-3 mt-6">
 
             <button
+              onClick={() => editProduct(product)}
               className="flex-1 bg-blue-500 hover:bg-blue-400 text-black py-3 rounded-2xl font-semibold"
             >
-              Editar
+            Editar
             </button>
 
             <button
+              onClick={() => deleteProduct(product.id)}
               className="flex-1 bg-red-500 hover:bg-red-400 text-black py-3 rounded-2xl font-semibold"
             >
-              Excluir
+            Excluir
             </button>
 
           </div>
