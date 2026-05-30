@@ -8,44 +8,48 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   const menu = [
-    {
-      name: "Links",
-      href: "/dashboard/links",
-    },
-    {
-      name: "Perfil",
-      href: "/dashboard/profile",
-    },
-    {
-      name: "Analytics",
-      href: "/dashboard/analytics",
-    },
-    {
-      name: "Criar Produtos",
-      href: "/dashboard/store",
-    },
-
-    {
-      name: "Marketplace",
-      href: "/marketplace",
-    },
-
-    {
-      name: "Upgrade PRO",
-      href: "/pricing",
-    },
-  ];
+  {
+    name: "🔗 Links",
+    href: "/dashboard/links",
+  },
+  {
+    name: "👤 Perfil",
+    href: "/dashboard/profile",
+  },
+  {
+    name: "📊 Analytics IA",
+    href: "/dashboard/analytics",
+  },
+  {
+    name: "🚀 Criar Produtos",
+    href: "/dashboard/store",
+  },
+  {
+    name: "🛒 Marketplace",
+    href: "/marketplace",
+  },
+  {
+    name: "💎 Upgrade PRO",
+    href: "/pricing",
+  },
+];
 
   return (
 
-    <aside className="
-      w-[230px]
-      bg-zinc-950
-      border-r
-      border-zinc-900
-      min-h-screen
-      p-5
-    ">
+    <aside
+      className="
+        w-72
+        min-h-screen
+        bg-zinc-950/90
+        backdrop-blur-xl
+        border-r
+        border-zinc-800
+        p-5
+        flex
+        flex-col
+        justify-between
+      "
+>
 
       <div className="mb-10">
 
@@ -58,7 +62,7 @@ export default function Sidebar() {
         </h1>
 
         <p className="text-zinc-500 text-sm mt-1">
-          Dashboard
+          IA Marketing Platform
         </p>
 
       </div>
@@ -71,17 +75,23 @@ export default function Sidebar() {
             key={item.href}
             href={item.href}
             className={`
-              px-4
-              py-3
+              flex
+              items-center
+              gap-3
+              px-5
+              py-4
               rounded-2xl
-              transition
+              transition-all
+              duration-300
               font-medium
-              ${
-                pathname === item.href
-                  ? "bg-green-500 text-black"
-                  : "bg-zinc-900 hover:bg-zinc-800 text-white"
-              }
-            `}
+              border
+
+             ${
+              pathname === item.href
+                ? "bg-green-500 text-black border-green-400 shadow-[0_0_25px_rgba(34,197,94,0.45)]"
+                : "bg-zinc-900 border-zinc-800 text-white hover:bg-zinc-800 hover:border-green-500/30"
+             }
+          `}
           >
             {item.name}
           </Link>
