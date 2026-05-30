@@ -20,7 +20,7 @@ export default function MarketplacePage() {
   const fetchProducts = async () => {
 
     const { data } = await supabase
-      .from("products")
+      .from("products_checkout")
       .select("*")
       .order("created_at", {
         ascending: false,
