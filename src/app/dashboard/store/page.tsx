@@ -9,6 +9,29 @@ export default function StorePage() {
   const [products, setProducts] =
     useState<any[]>([]);
 
+  const fetchProducts = async () => {
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) return;
+
+  const { data } = await supabase
+    .from("products_checkout")
+    .select("*")
+    .eq("user_id", user.id)
+    .order("created_at", {
+      ascending: false,
+    });
+
+  setProducts(data || []);
+};
+
+useEffect(() => {
+  fetchProducts();
+}, []);
+
   const [title, setTitle] =
     useState("");
 
@@ -23,30 +46,6 @@ export default function StorePage() {
 
   const [loading, setLoading] =
     useState(false);
-
-  async function loadProducts() {
-
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    if (!user) return;
-
-    const { data } = await supabase
-      .from("products_checkout")
-      .select("*")
-      .eq("user_id", user.id)
-      .order("created_at", {
-        ascending: false,
-      });
-
-    setProducts(data || []);
-
-  }
-
-  useEffect(() => {
-    loadProducts();
-  }, []);
 
   async function handleUpload(
     e: any
@@ -135,7 +134,7 @@ export default function StorePage() {
       setPrice("");
       setImageUrl("");
 
-      loadProducts();
+      fetchProducts();
 
     } finally {
 
@@ -243,80 +242,84 @@ export default function StorePage() {
 
         </div>
 
-        {/* PRODUTOS */}
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+        <div className="mt-14">
 
-          {products.map((product) => (
+  <h2 className="text-3xl font-bold mb-8">
+    📦 Meus Produtos
+  </h2>
 
-            <div
-              key={product.id}
-              className="
-                bg-zinc-900
-                border
-                border-zinc-800
-                rounded-3xl
-                overflow-hidden
-              "
+  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+
+    {products.map((product) => (
+
+      <div
+        key={product.id}
+        className="bg-zinc-900 border border-zinc-800 rounded-3xl overflow-hidden"
+      >
+
+        <img
+          src={product.image_url}
+          className="w-full h-52 object-cover"
+        />
+
+        <div className="p-5">
+
+          <h3 className="text-xl font-bold">
+            {product.title}
+          </h3>
+
+          <p className="text-green-400 text-3xl font-black mt-4">
+            R$ {product.price}
+          </p>
+
+          <div className="flex gap-3 mt-6">
+
+            <button
+              className="flex-1 bg-blue-500 hover:bg-blue-400 text-black py-3 rounded-2xl font-semibold"
             >
+              Editar
+            </button>
 
-              <img
-                src={product.image_url}
-                className="
-                  w-full
-                  h-52
-                  object-cover
-                "
-              />
+            <button
+              className="flex-1 bg-red-500 hover:bg-red-400 text-black py-3 rounded-2xl font-semibold"
+            >
+              Excluir
+            </button>
 
-              <div className="p-5">
+          </div>
 
-                <h3 className="text-xl font-bold">
-                  {product.title}
-                </h3>
-
-                <p className="text-zinc-400 text-sm mt-2 line-clamp-3">
-                  {product.description}
-                </p>
-
-                <div className="mt-5">
-
-                  <span className="text-3xl font-bold text-green-400">
-                    R$ {product.price}
-                  </span>
-
-                </div>
-
-                <a
-                  href={`/checkout/${product.checkout_slug}`}
-                  target="_blank"
-                  className="
-                    mt-5
-                    block
-                    bg-green-500
-                    hover:bg-green-400
-                    transition
-                    text-center
-                    text-black
-                    py-3
-                    rounded-2xl
-                    font-bold
-                  "
-                >
-                  Ver Checkout
-                </a>
-
-              </div>
-
-            </div>
-
-          ))}
+          <a
+            href={`/product/${product.id}`}
+            target="_blank"
+            className="
+              mt-4
+              block
+              text-center
+              bg-green-500
+              hover:bg-green-400
+              text-black
+              py-3
+              rounded-2xl
+              font-bold
+            "
+          >
+            Abrir Página 🚀
+          </a>
 
         </div>
 
       </div>
 
-    </div>
+    ))}
 
-  );
+  </div>
+
+</div>
+
+</div>
+
+</div>
+
+);
 
 }
