@@ -54,13 +54,13 @@ export default function Sidebar() {
 
       <div className="mb-10">
 
-        <Image
+       <Image
           src="/logo.png"
-          alt="PromoLink"
-          width={220}
-          height={220}
-          className="object-contain"
-      />
+          alt=""
+          width={60}
+          height={60}
+          className="rounded-2xl"
+        />
 
         <p className="text-zinc-500 text-sm mt-1">
           IA Marketing Platform
@@ -75,6 +75,7 @@ export default function Sidebar() {
           <Link
             key={item.href}
             href={item.href}
+            prefetch={true}
             className={`
               flex
               items-center
@@ -102,20 +103,21 @@ export default function Sidebar() {
       </nav>
 
       <Link
-  href="/login"
-  className="
-    mt-10
-    bg-red-500
-    hover:bg-red-400
-    transition
-    text-white
-    py-4
-    rounded-2xl
-    font-bold
-    w-full
-    text-center
-    block
-  "
+        href="/login"
+        prefetch={true}
+        className="
+          mt-10
+          bg-red-500
+          hover:bg-red-400
+          transition
+          text-white
+          py-4
+          rounded-2xl
+          font-bold
+          w-full
+          text-center
+          block
+        "
 >
   Sair da conta
 </Link>

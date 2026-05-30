@@ -1,10 +1,17 @@
 "use client";
 
 import Sidebar from "@/components/Sidebar";
-import ProfilePreview from "@/components/dashboard/ProfilePreview";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import ThemeCustomizer from "@/components/ThemeCustomizer";
+import dynamic from "next/dynamic";
+
+const ProfilePreview = dynamic(
+  () => import("@/components/dashboard/ProfilePreview"),
+  {
+    ssr: false,
+  }
+);
 
 export default function ProfilePage() {
   const [loading, setLoading] =
@@ -19,7 +26,15 @@ export default function ProfilePage() {
   // USE EFFECT
     useEffect(() => {
 
-  loadProfile();
+  async function loadData() {
+
+    await Promise.all([
+      loadProfile(),
+    ]);
+
+  }
+
+  loadData();
 
 }, []);
 
