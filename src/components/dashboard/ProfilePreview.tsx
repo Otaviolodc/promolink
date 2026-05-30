@@ -63,11 +63,10 @@ export default function ProfilePreview({
                   className="
                     w-16
                     h-16
-                    rounded-2xl
+                    rounded-xl
                     object-cover
                     border
-                    border-white/10
-                    shadow-lg
+                    border-zinc-700
                   "
                 />
 
