@@ -1,5 +1,6 @@
 "use client";
 
+import Sidebar from "@/components/Sidebar";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 
@@ -41,7 +42,11 @@ export default function MarketplacePage() {
 
   return (
 
-    <div className="min-h-screen bg-black text-white">
+  <div className="flex bg-black text-white min-h-screen">
+
+    <Sidebar />
+
+    <div className="flex-1">
 
       {/* HERO */}
       <div className="border-b border-zinc-800 bg-gradient-to-b from-zinc-900 to-black">
@@ -438,6 +443,8 @@ export default function MarketplacePage() {
       </div>
 
     </div>
+
+  </div>
 
   );
 
