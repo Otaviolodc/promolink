@@ -359,7 +359,7 @@ export default function MarketplacePage() {
 
                   {/* BOTÃO */}
                   <a
-                    href={product.affiliate_url}
+                    href={`/product/${product.id}`}
                     target="_blank"
                     className="
                       mt-8
