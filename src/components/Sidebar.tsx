@@ -21,7 +21,7 @@ export default function Sidebar() {
       href: "/dashboard/analytics",
     },
     {
-      name: "Loja",
+      name: "Criar Produtos",
       href: "/dashboard/store",
     },
 

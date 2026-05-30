@@ -157,11 +157,11 @@ export default function StorePage() {
         <div className="mb-10">
 
           <h1 className="text-4xl font-bold">
-            Minha Loja
+            🚀 Criar Produtos
           </h1>
 
-          <p className="text-zinc-400 mt-2">
-            Venda produtos digitais dentro do PromoLink
+          <p className="text-gray-400 mt-2 text-lg">
+            Crie ebooks, cursos, PDFs, ferramentas e monetize no marketplace.
           </p>
 
         </div>
