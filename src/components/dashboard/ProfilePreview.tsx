@@ -59,8 +59,16 @@ export default function ProfilePreview({
               >
 
                 <img
-                  src="/placeholder.png"
-                  className="w-16 h-16 rounded-xl object-cover"
+                  src="/logo.png"
+                  className="
+                    w-16
+                    h-16
+                    rounded-2xl
+                    object-cover
+                    border
+                    border-white/10
+                    shadow-lg
+                  "
                 />
 
                 <div>
