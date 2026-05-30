@@ -26,7 +26,7 @@ export default function ProductPage() {
   const fetchProduct = async () => {
 
     const { data } = await supabase
-      .from("products")
+      .from("products_checkout")
       .select("*")
       .eq("id", id)
       .single();
@@ -37,7 +37,7 @@ export default function ProductPage() {
 
       const { data: related } =
         await supabase
-          .from("products")
+          .from("products_checkout")
           .select("*")
           .neq("id", data.id)
           .limit(4);
